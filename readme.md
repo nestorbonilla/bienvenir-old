@@ -1,4 +1,4 @@
-![Bievenir Logo](https://github.com/nestorbonilla/bienvenir/tree/master/documentation/resources/logo_main.svg)
+![Bievenir Logo](/documentation/resources/logo_main.svg)
 > Project for the Decentralized Impact Incubator Hackathon by **Blockchain for Social Impact**
 > by **Nestor Bonilla**
 

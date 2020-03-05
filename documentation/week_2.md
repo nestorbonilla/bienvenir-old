@@ -26,4 +26,4 @@ We have identified two main risks:
 ## What is the impact of your solution? How will it be measured?
 Our impact will be an autonomous platform that will allow participant non-profit organizations to have a live impact measurement distributed by phase on their allocated resources for migrants in the Latin America region.
 
-![Bievenir Isotype](https://github.com/nestorbonilla/bienvenir/tree/master/documentation/resources/isotype.svg)
+![Bievenir Isotype](/resources/isotype.svg)
