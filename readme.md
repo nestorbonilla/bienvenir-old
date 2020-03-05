@@ -1,4 +1,4 @@
-<center>
+<center> 
     <img align="center" width="30%" src="/documentation/resources/logo_main.svg">
 </center>
 

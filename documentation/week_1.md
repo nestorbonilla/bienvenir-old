@@ -24,7 +24,3 @@ Other organizations are currently using solutions to address the migration and r
 ## What are the geopolitical, cultural-social-economic factors that must be taken into consideration? What are some nuances and complexities that must be addressed?
 
 Currently, the region of Central America is facing another migration era with historical picks due to the socio-political instability and human rights abuses. In this context, there's an evident need for new and innovative ways to address this problematic, but at the same time, this adds complexity layers that can be overcome with a proper articulation between non-profit organizations and government countries.
-
-<center>
-    <img align="center" width="15%" src="/documentation/resources/isotype.svg">
-</center>

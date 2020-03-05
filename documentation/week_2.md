@@ -25,7 +25,3 @@ We have identified two main risks:
 
 ## What is the impact of your solution? How will it be measured?
 Our impact will be an autonomous platform that will allow participant non-profit organizations to have a live impact measurement distributed by phase on their allocated resources for migrants in the Latin America region.
-
-<center>
-<img align="center" width="50%" src="/documentation/resources/isotype.svg">
-</center>
