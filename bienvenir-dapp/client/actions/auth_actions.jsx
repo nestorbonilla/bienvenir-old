@@ -30,11 +30,11 @@ export const celoLogin = () => async dispatch => {
         dispatch({ type: CELO_LOGIN_SUCCESS, payload: address })
     } else {
         //Lauch Celo call to Login
-        doCeloLogin()
+        doCeloLogin(dispatch)
     }
 }
 
-const doCeloLogin = async () => {
+const doCeloLogin = async dispatch => {
 
     const requestId = 'login'
     const dappName = 'Hello Celo'
@@ -54,16 +54,26 @@ const doCeloLogin = async () => {
 
     const [cUSDBalanceBig, cUSDDecimals] = await Promise.all([stableToken.balanceOf(kit.defaultAccount), stableToken.decimals()])
     let cUSDBalance = cUSDBalanceBig.toString()
-    //this.setState({ cUSDBalance, isLoadingBalance: false })
-    //this.setState({ address: dappkitResponse.address, phoneNumber: dappkitResponse.phoneNumber })
+    let cUSDDecimal = cUSDDecimals.toString()
     if (cUSDBalance === '') {
         return dispatch({ type: CELO_LOGIN_FAIL })
     } else {
-        await AsyncStorage.setItem('cl_address', dappkitResponse.address)
-        //await AsyncStorage.setItem('cl_phone', dappkitResponse.phoneNumber)
+        await AsyncStorage.setItem('cl_address', '' + dappkitResponse.address)
+        await AsyncStorage.setItem('cl_phone', '' + dappkitResponse.phoneNumber)
         await AsyncStorage.setItem('cl_balance', cUSDBalance)
+        await AsyncStorage.setItem('cl_decimal', cUSDDecimal)
+
+        let authentication = {
+            'clLogin': 'Salir',
+            'clAddress': dappkitResponse.address,
+            'clPhone': dappkitResponse.phoneNumber,
+            'clBalance': cUSDBalance,
+            'clDecimal': cUSDDecimal
+        }
         
-        dispatch({ type: CELO_LOGIN_SUCCESS, payload: cUSDBalance })
+        console.log('cl_authentication', authentication)
+        
+        dispatch({ type: CELO_LOGIN_SUCCESS, authentication })
     }
         
 }

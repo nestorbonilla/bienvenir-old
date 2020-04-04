@@ -5,7 +5,15 @@ import reducers from '../reducers/'
 const store = createStore(
     reducers,
     {
-        
+        auth: {
+            authentication: {
+                clLogin: 'Autenticar',
+                clAddress: '...',
+                clBalance: '...',
+                clDecimal: '...',
+                clPhone: '...'
+            }
+        }
     },
     compose(
         applyMiddleware(thunk)
