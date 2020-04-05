@@ -1,5 +1,5 @@
-pragma solidity >=0.4.0 <0.7.0;
-pragma experimental ABIEncoderV2;
+pragma solidity >=0.5.0 <0.7.0;
+//pragma experimental ABIEncoderV2;
 
 /// @title Decentralized application to help coordinate and improve the impact
 ///        metric of non-profit organizations that work with migrants in Latin America
@@ -20,7 +20,6 @@ contract Bienvenir {
     uint nextSignedCommitmentId;
 
     mapping(uint => Commitment) commitments;
-    //mapping(address => SignedCommitment[]) signedCommitments;
     mapping(address => mapping(uint => bool)) signedCommitments;
     mapping(address => bool) beneficiaries;
     mapping(address => bool) consultants;
