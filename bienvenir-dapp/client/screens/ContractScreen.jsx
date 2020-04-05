@@ -1,14 +1,67 @@
-import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import React, { Component } from 'react'
+import { StyleSheet, ScrollView } from 'react-native'
+//import CardComponent from '../components/CardComponent'
+import { 
+  Avatar,
+  Paragraph,
+  Card,
+  Button,
+  IconButton,
+  withTheme,
+  Theme,
+} from 'react-native-paper';
+import { connect } from 'react-redux'
+import * as actions from '../actions'
+
+const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
 class ContractScreen extends Component {
   render() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Contract Screen</Text>
-      </View>
+    return(
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+      >
+        {this.props.commitments.map((item, i) => {
+          return (
+            <Card
+              key={item.title}
+              style={styles.card}
+              onPress={() => {
+                this.props.navigation.navigate('contractDetail')
+              }}
+            >
+              <Card.Title title={item.title} />
+              <Card.Content>
+                <Paragraph>{item.description}</Paragraph>
+              </Card.Content>
+              <Card.Cover source={require('../assets/default_card_background.png')} />
+            </Card>
+          )
+        })}  
+      </ScrollView>
     )
   }
 }
 
-export default ContractScreen;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: 4,
+  },
+  card: {
+    margin: 4,
+  },
+})
+
+function mapStateToProps(props) {
+  console.log('celo_contract', props.commitment.commitments)
+  return {
+    celo: props.auth.authentication,
+    commitments: props.commitment.commitments
+  }
+}
+
+export default connect(mapStateToProps, actions)(withTheme(ContractScreen));

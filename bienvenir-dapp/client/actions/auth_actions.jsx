@@ -36,9 +36,13 @@ export const celoLogin = () => async dispatch => {
 
 const doCeloLogin = async dispatch => {
 
+    //Login to get Celo data account
+
     const requestId = 'login'
-    const dappName = 'Hello Celo'
+    const dappName = 'Bienvenir'
     const callback = Linking.makeUrl('/my/path')
+    const networkId = await web3.eth.net.getId();
+    const deployedNetwork = HelloWorldContract.networks[networkId];
   
     requestAccountAddress({
       requestId,
@@ -63,12 +67,24 @@ const doCeloLogin = async dispatch => {
         await AsyncStorage.setItem('cl_balance', cUSDBalance)
         await AsyncStorage.setItem('cl_decimal', cUSDDecimal)
 
+        //Creating Celo instance
+        const instance = new web3.eth.Contract(
+            HelloWorldContract.abi,
+            deployedNetwork && deployedNetwork.address,
+            { 
+                from: kit.defaultAccount
+            }
+        )
+
         let authentication = {
             'clLogin': 'Salir',
             'clAddress': dappkitResponse.address,
             'clPhone': dappkitResponse.phoneNumber,
             'clBalance': cUSDBalance,
-            'clDecimal': cUSDDecimal
+            'clDecimal': cUSDDecimal,
+            'clContract1': instance,
+            'clContractName': '',
+            'clTextInput': ''
         }
         
         console.log('cl_authentication', authentication)
@@ -76,4 +92,19 @@ const doCeloLogin = async dispatch => {
         dispatch({ type: CELO_LOGIN_SUCCESS, authentication })
     }
         
+}
+
+export const celoRead = () => async dispatch => {
+    
+    //Creating Celo instance
+    const instance = new web3.eth.Contract(
+        HelloWorldContract.abi,
+        deployedNetwork && deployedNetwork.address,
+        { 
+            from: kit.defaultAccount
+        }
+    )
+
+    let name = await instance.methods.getName().call()
+    dispatch({ type: CELO_LOGIN_SUCCESS, name })
 }

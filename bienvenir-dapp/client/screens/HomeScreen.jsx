@@ -17,12 +17,12 @@ class HomeScreen extends Component {
             style={styles.button}
             onPress={()=> this.props.celoLogin()}
             underlayColor='#fff'>
-            <Text style={styles.buttonText}>{this.props.celoAuth.clLogin}</Text>
+            <Text style={styles.buttonText}>{this.props.celo.clLogin}</Text>
         </TouchableOpacity>
         <Text>Dirección de cuenta:</Text>
-        <Text>{this.props.celoAuth.clAddress}</Text>
-        <Text>Teléfono: {this.props.celoAuth.clPhone}</Text>
-        <Text>Balance cUSD: {this.props.celoAuth.clBalance}</Text>
+        <Text>{this.props.celo.clAddress}</Text>
+        <Text>Teléfono: {this.props.celo.clPhone}</Text>
+        <Text>Balance cUSD: {this.props.celo.clBalance}</Text>
           
         <Text>Compromisos actuales</Text>
       </View>
@@ -56,8 +56,9 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(props) {
+  console.log('celo_auth', props.auth.authentication)
   return {
-    celoAuth: props.auth.authentication
+    celo: props.auth.authentication
   }
 }
 

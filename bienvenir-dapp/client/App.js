@@ -37,8 +37,20 @@ function HomeStack() {
 function ContractStack() {
   return(
     <Stack.Navigator>
-      <Stack.Screen name="contract" component={ContractScreen} />
-      <Stack.Screen name="contractDetail" component={ContractDetailScreen} />
+      <Stack.Screen
+        name="contract"
+        component={ContractScreen}
+        options={{
+          title: 'Compromisos',
+        }}
+      />
+      <Stack.Screen
+        name="contractDetail"
+        component={ContractDetailScreen}
+        options={{
+          title: 'Pasos',
+        }}
+      />
     </Stack.Navigator>
   )
 }

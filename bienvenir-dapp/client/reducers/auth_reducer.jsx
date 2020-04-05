@@ -3,7 +3,20 @@ import {
     CELO_LOGIN_FAIL
 } from '../actions/types'
 
-export default function(state = {}, action) {
+const INITIAL_STATE = {
+    authentication: {
+        clLogin: 'Autenticar',
+        clAddress: '...',
+        clBalance: '...',
+        clDecimal: '...',
+        clPhone: '...',
+        clContract1: {},
+        clContractName: '',
+        clTextInput: ''
+    }
+}
+
+export default function(state = INITIAL_STATE, action) {
     switch (action.type) {
         case CELO_LOGIN_SUCCESS:
             return { authentication: action.authentication }
