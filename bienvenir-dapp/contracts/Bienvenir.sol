@@ -1,5 +1,5 @@
 pragma solidity >=0.5.0 <0.7.0;
-//pragma experimental ABIEncoderV2;
+pragma experimental ABIEncoderV2;
 
 /// @title Decentralized application to help coordinate and improve the impact
 ///        metric of non-profit organizations that work with migrants in Latin America
@@ -23,7 +23,6 @@ contract Bienvenir {
     mapping(address => mapping(uint => bool)) signedCommitments;
     mapping(address => bool) beneficiaries;
     mapping(address => bool) consultants;
-    mapping(address => bool) verifiers;
     mapping(address => Profile) profiles;
 
     enum AccomplishmentChoices { Unassigned, Assigned, Incomplete, Complete }
@@ -92,20 +91,9 @@ contract Bienvenir {
         admin = msg.sender;
     }
 
-    /// @notice Admin add a verifier to be able to help with the manage
-    ///         of the different steps that needs to be validated to continue
-    ///         with the different process in the signed commitments
-    /// @dev verifier must be provided as an address
-    /// @param verifier The address of a verifier
-    function addVerifier(
-        address verifier
-    ) external onlyAdmin() {
-        verifiers[verifier] == true;
-    }
-
     /// @notice Admin adds a consultant to allow this to take the responsibility
     ///         of supporting a beneficiary on a specific process, part of its commitment
-    ///         previously signed.
+    ///         previously signed. For example a lawyer.
     /// @dev consultant must be provided as an address
     /// @param consultant The address of a consultant
     function addConsultant(

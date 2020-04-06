@@ -5,7 +5,7 @@ import {
 
 const INITIAL_STATE = {
     authentication: {
-        clLogin: 'Autenticar',
+        clLogin: 'AUTENTICAR',
         clAddress: '...',
         clBalance: '...',
         clDecimal: '...',

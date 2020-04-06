@@ -12,6 +12,7 @@ import HomeDetailScreen from './screens/HomeDetailScreen'
 import ContractScreen from './screens/ContractScreen'
 import ContractDetailScreen from './screens/ContractDetailScreen'
 import ProfileScreen from './screens/ProfileScreen'
+import ProfileDetailScreen from './screens/ProfileDetailScreen'
 import ErrorBoundary from './components/ErrorBoundary'
 
 const Stack = createStackNavigator();
@@ -29,7 +30,13 @@ function HomeStack() {
           title: 'Bienvenir',
         }}
       />
-      <Stack.Screen name="mainDetail" component={HomeDetailScreen} />
+      <Stack.Screen
+        name="mainDetail"
+        component={HomeDetailScreen}
+        options={{
+          title: 'Compromisos Firmados',
+        }}
+      />
     </Stack.Navigator>
   )
 }
@@ -55,6 +62,27 @@ function ContractStack() {
   )
 }
 
+function ProfileStack() {
+  return(
+    <Stack.Navigator>
+      <Stack.Screen
+        name="profile"
+        component={ProfileScreen}
+        options={{
+          title: 'Perfil',
+        }}
+      />
+      <Stack.Screen
+        name="profileDetail"
+        component={ProfileDetailScreen}
+        options={{
+          title: 'Detalle',
+        }}
+      />
+    </Stack.Navigator>
+  )
+}
+
 function LogoTitle() {
   return (
     <Image
@@ -69,9 +97,7 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <NavigationContainer
-          onStateChange={state => console.log('New state is', state)}
-        >
+        <NavigationContainer>
           <ErrorBoundary>
             <Tab.Navigator
               initialRouteName="home"
@@ -98,8 +124,8 @@ class App extends Component {
                 }}
               />
               <Tab.Screen
-                name="profile"
-                component={ProfileScreen}
+                name="profiles"
+                component={ProfileStack}
                 options={{
                   tabBarLabel: 'Perfil',
                   tabBarIcon: ({ color, size }) => (

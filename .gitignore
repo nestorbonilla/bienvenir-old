@@ -1,3 +1,6 @@
+
+.DS_STORE
 .vscode
 node_modules
 bienvenir-dapp/node_modules
+bienvenir-dapp/client/.expo

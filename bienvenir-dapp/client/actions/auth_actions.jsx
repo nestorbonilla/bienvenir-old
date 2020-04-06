@@ -77,7 +77,7 @@ const doCeloLogin = async dispatch => {
         )
 
         let authentication = {
-            'clLogin': 'Salir',
+            'clLogin': 'SALIR',
             'clAddress': dappkitResponse.address,
             'clPhone': dappkitResponse.phoneNumber,
             'clBalance': cUSDBalance,

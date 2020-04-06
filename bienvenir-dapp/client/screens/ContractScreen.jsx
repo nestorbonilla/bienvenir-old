@@ -13,8 +13,6 @@ import {
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 
-const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
-
 class ContractScreen extends Component {
   render() {
     return(
@@ -35,7 +33,7 @@ class ContractScreen extends Component {
               <Card.Content>
                 <Paragraph>{item.description}</Paragraph>
               </Card.Content>
-              <Card.Cover source={require('../assets/default_card_background.png')} />
+              <Card.Cover source={require('../assets/card_background_default.png')} />
             </Card>
           )
         })}  
@@ -57,11 +55,11 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(props) {
-  console.log('celo_contract', props.commitment.commitments)
+  //console.log('celo_contract', props.commitment.commitments)
   return {
     celo: props.auth.authentication,
     commitments: props.commitment.commitments
   }
 }
 
-export default connect(mapStateToProps, actions)(withTheme(ContractScreen));
+export default connect(mapStateToProps, actions)(withTheme(ContractScreen))

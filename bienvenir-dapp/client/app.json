@@ -11,7 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/bienvenir_icon.png",
+    "icon": "./assets/app_icon.png",
     "scheme": "celodappkit",
     "splash": {
       "image": "./assets/splash.png",
