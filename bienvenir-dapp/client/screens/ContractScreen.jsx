@@ -26,7 +26,12 @@ class ContractScreen extends Component {
               key={item.title}
               style={styles.card}
               onPress={() => {
-                this.props.navigation.navigate('contractDetail')
+                this.props.navigation.navigate('contractDetail', {
+                  id: item.id,
+                  title: item.title,
+                  description: item.description,
+                  steps: item.steps
+                })
               }}
             >
               <Card.Title title={item.title} />

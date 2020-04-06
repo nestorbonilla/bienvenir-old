@@ -2,7 +2,8 @@ import { AsyncStorage} from 'react-native'
 
 import {
     CELO_LOGIN_SUCCESS,
-    CELO_LOGIN_FAIL
+    CELO_LOGIN_FAIL,
+    CELO_LOGOUT_SUCCESS,
 } from './types'
 
 import '../global'
@@ -24,7 +25,7 @@ import HelloWorldContract from '../contracts/HelloWorld.json'
 // AsyncStorage.getItem('cl_token')
 
 export const celoLogin = () => async dispatch => {
-    let address = await AsyncStorage.getItem('cl_address')
+    let address = await AsyncStorage.getItem('clLogin')
     if(address) {
         //Celo Login is done
         dispatch({ type: CELO_LOGIN_SUCCESS, payload: address })
@@ -87,11 +88,30 @@ const doCeloLogin = async dispatch => {
             'clTextInput': ''
         }
         
-        console.log('cl_authentication', authentication)
-        
         dispatch({ type: CELO_LOGIN_SUCCESS, authentication })
     }
         
+}
+
+export const celoLogout = () => async dispatch => {
+
+    await AsyncStorage.setItem('cl_address', '')
+    await AsyncStorage.setItem('cl_phone', '')
+    await AsyncStorage.setItem('cl_balance', '')
+    await AsyncStorage.setItem('cl_decimal', '')
+
+    let authentication = {
+        'clLogin': 'AUTENTICAR',
+        'clAddress': '...',
+        'clBalance': '...',
+        'clDecimal': '...',
+        'clPhone': '...',
+        'clContract1': {},
+        'clContractName': '',
+        'clTextInput': ''
+    }
+    
+    dispatch({ type: CELO_LOGOUT_SUCCESS, authentication })
 }
 
 export const celoRead = () => async dispatch => {

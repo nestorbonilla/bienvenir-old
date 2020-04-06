@@ -20,7 +20,7 @@ class HomeScreen extends Component {
             style={styles.button}
             mode="contained"
             onPress={
-              () => this.props.celoLogin()
+              () => this.manageLogin()
             }
           >{this.props.celo.clLogin}</Button>
         <Text>Dirección de cuenta:</Text>
@@ -31,6 +31,16 @@ class HomeScreen extends Component {
         <Text>Compromisos actuales</Text>
       </View>
     );
+  }
+
+  async manageLogin() {
+
+    console.log('CELO_LOGIN', this.props.celo.clLogin)
+    if(this.props.celo.clLogin === 'AUTENTICAR') {
+      this.props.celoLogin()
+    } else {
+      this.props.celoLogout()
+    }
   }
 
 }
@@ -53,7 +63,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(props) {
-  console.log('celo_auth', props.auth.authentication)
+  //console.log('celo_auth', props.auth.authentication)
   return {
     celo: props.auth.authentication
   }

@@ -24,14 +24,14 @@ module.exports = {
   networks: {
     // Use the development network if you are using @celo/ganache-cli
     // https://www.npmjs.com/package/@celo/ganache-cli
-    development: {
+    test: {
      host: "127.0.0.1",
-     port: 8545,
+     port: 7545,
      network_id: "*",
     },
     alfajores: {
-      provider: kit.web3.currentProvider,
-      network_id: 44786
+      provider: kit.web3.currentProvider, // CeloProvider
+      network_id: 44786                   // Alfajores network id
     }
   }
 };

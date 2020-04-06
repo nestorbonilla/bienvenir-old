@@ -12,7 +12,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/app_icon.png",
-    "scheme": "celodappkit",
+    "scheme": "bienvenir",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

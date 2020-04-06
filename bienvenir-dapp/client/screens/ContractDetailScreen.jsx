@@ -25,25 +25,26 @@ class ContractDetailScreen extends Component {
     });
 
   render() {
+    const { id, title, description, steps } = this.props.route.params
+    //console.log('contract_detail this.props ', this.props.route.params)
     return (
       <View>
-        <List.Section title="Compromiso no. 1">
-          <List.Item
-            titleNumberOfLines={10}
-            title="Concluir el curso 'Iniciando mi proceso migratorio' en la plataforma Bienvenir."
-            style={styles.listItem}
-            left={
-              props => <List.Icon {...props} icon="numeric-1-circle-outline" />
-            }
-          />
-          <List.Item
-            titleNumberOfLines={10}
-            title="Completar prueba diagnostica del curso 'Iniciando mi proceso migratorio' en la plataforma Bienvenir y obtener como minimo 70% de puntaje."
-            style={styles.listItem}
-            left={
-              props => <List.Icon {...props} icon="numeric-2-circle-outline" />
-            }
-          />
+        <List.Section
+          titleNumberOfLines={10}
+          title={title}
+        >
+          {steps.map((item, i) => {
+          return (
+            <List.Item
+              key={item.id}
+              titleNumberOfLines={10}
+              title={item.content}
+              style={styles.listItem}
+              left={
+                props => <List.Icon {...props} icon="numeric-1-circle-outline" />
+              }
+            />
+          )})}
         </List.Section>
         <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => console.log('Pressed')}>Firmar Compromiso</Button>
       </View>
@@ -79,6 +80,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(props) {
+  //console.log('all props', props)
   return {
     celo: props.auth.authentication,
     commitments: props.commitment.commitments

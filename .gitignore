@@ -4,3 +4,5 @@
 node_modules
 bienvenir-dapp/node_modules
 bienvenir-dapp/client/.expo
+bienvenir-dapp/client/node_modules
+bienvenir-dapp/client/contracts/*
