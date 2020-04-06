@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 
-class ContractScreen extends Component {
+class SignedContractScreen extends Component {
   render() {
     return(
       <ScrollView
@@ -26,7 +26,7 @@ class ContractScreen extends Component {
               key={item.title}
               style={styles.card}
               onPress={() => {
-                this.props.navigation.navigate('contractDetail', {
+                this.props.navigation.navigate('signedContractDetail', {
                   id: item.id,
                   title: item.title,
                   description: item.description,
@@ -67,4 +67,4 @@ function mapStateToProps(props) {
   }
 }
 
-export default connect(mapStateToProps, actions)(withTheme(ContractScreen))
+export default connect(mapStateToProps, actions)(withTheme(SignedContractScreen))

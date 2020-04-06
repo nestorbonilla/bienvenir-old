@@ -13,7 +13,7 @@ import {
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 
-class ContractDetailScreen extends Component {
+class OpenContractDetailScreen extends Component {
   
   state = {
     expanded: true
@@ -87,4 +87,4 @@ function mapStateToProps(props) {
   }
 }
 
-export default connect(mapStateToProps, actions)(withTheme(ContractDetailScreen));
+export default connect(mapStateToProps, actions)(withTheme(OpenContractDetailScreen));

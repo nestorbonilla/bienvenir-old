@@ -27,8 +27,7 @@ class HomeScreen extends Component {
         <Text>{this.props.celo.clAddress}</Text>
         <Text>Teléfono: {this.props.celo.clPhone}</Text>
         <Text>Balance cUSD: {this.props.celo.clBalance}</Text>
-          
-        <Text>Compromisos actuales</Text>
+        <Text>Compromisos actuales: 0</Text>
       </View>
     );
   }

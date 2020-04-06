@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { YellowBox } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
 import { MaterialCommunityIcons } from 'react-native-vector-icons'
@@ -8,15 +9,17 @@ import { Provider } from 'react-redux'
 import store from './store'
 
 import HomeScreen from './screens/HomeScreen'
-import HomeDetailScreen from './screens/HomeDetailScreen'
-import ContractScreen from './screens/ContractScreen'
-import ContractDetailScreen from './screens/ContractDetailScreen'
+import OpenContractScreen from './screens/OpenContractScreen'
+import OpenContractDetailScreen from './screens/OpenContractDetailScreen'
+import SignedContractScreen from './screens/SignedContractScreen'
+import SignedContractDetailScreen from './screens/SignedContractDetailScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import ProfileDetailScreen from './screens/ProfileDetailScreen'
 import ErrorBoundary from './components/ErrorBoundary'
 
 const Stack = createStackNavigator();
-const Tab = createMaterialBottomTabNavigator();
+const BottomTab = createMaterialBottomTabNavigator()
+const TopTab = createMaterialTopTabNavigator()
 
 YellowBox.ignoreWarnings(['Warning: The provided value \'moz', 'Warning: The provided value \'ms-stream'])
 
@@ -30,14 +33,28 @@ function HomeStack() {
           title: 'Bienvenir',
         }}
       />
-      <Stack.Screen
-        name="mainDetail"
-        component={HomeDetailScreen}
+    </Stack.Navigator>
+  )
+}
+
+function ContractTopTab() {
+  return(
+    <TopTab.Navigator>
+      <TopTab.Screen
+        name="openContract"
+        component={OpenContractScreen}
         options={{
-          title: 'Compromisos Firmados',
+          title: 'Disponibles',
         }}
       />
-    </Stack.Navigator>
+      <TopTab.Screen
+        name="signedContract"
+        component={SignedContractScreen}
+        options={{
+          title: 'Firmados',
+        }}
+      />
+    </TopTab.Navigator>
   )
 }
 
@@ -45,17 +62,24 @@ function ContractStack() {
   return(
     <Stack.Navigator>
       <Stack.Screen
-        name="contract"
-        component={ContractScreen}
+        name="contractTopTab"
+        component={ContractTopTab}
         options={{
           title: 'Compromisos',
         }}
       />
       <Stack.Screen
-        name="contractDetail"
-        component={ContractDetailScreen}
+        name="openContractDetail"
+        component={OpenContractDetailScreen}
         options={{
           title: 'Pasos',
+        }}
+      />
+      <Stack.Screen
+        name="signedContractDetail"
+        component={SignedContractDetailScreen}
+        options={{
+          title: 'Pasos a hacer',
         }}
       />
     </Stack.Navigator>
@@ -99,11 +123,11 @@ class App extends Component {
       <Provider store={store}>
         <NavigationContainer>
           <ErrorBoundary>
-            <Tab.Navigator
+            <BottomTab.Navigator
               initialRouteName="home"
               barStyle={{ backgroundColor: '#2169B3' }}
             >          
-              <Tab.Screen
+              <BottomTab.Screen
                 name="home"
                 component={HomeStack}
                 options={{
@@ -113,17 +137,17 @@ class App extends Component {
                   )
                 }}
               />
-              <Tab.Screen
+              <BottomTab.Screen
                 name="contracts"
                 component={ContractStack}
                 options={{
                   tabBarLabel: 'Compromisos',
                   tabBarIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons name="note-outline" color={color} size={22} />
+                    <MaterialCommunityIcons name="script-text-outline" color={color} size={22} />
                   )
                 }}
               />
-              <Tab.Screen
+              <BottomTab.Screen
                 name="profiles"
                 component={ProfileStack}
                 options={{
@@ -133,7 +157,7 @@ class App extends Component {
                   )
                 }}  
               />
-            </Tab.Navigator>
+            </BottomTab.Navigator>
           </ErrorBoundary>
         </NavigationContainer>
       </Provider>
