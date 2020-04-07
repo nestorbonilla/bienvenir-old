@@ -24,15 +24,14 @@ class ProfileScreen extends Component {
             </View>
           </TouchableOpacity>
           <View>
-            <Text style={{ fontSize: 16 }}>Nombre Completo</Text>
-            <Text
+            <Text style={{ fontSize: 16 }}>{this.props.celo.clPhone}</Text>
+            {/* <Text
               style={{
                 color: "gray",
                 fontSize: 16
               }}
-            >
-              Teléfono
-            </Text>
+            >{this.celo.clPhone}
+            </Text> */}
           </View>
         </View>
         <InfoText text="Cuenta" />

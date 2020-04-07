@@ -5,7 +5,7 @@ import {
     CELO_LOGIN_FAIL,
     CELO_LOGOUT_SUCCESS,
 } from './types'
-
+import store from '../store';
 import '../global'
 import { web3, kit } from '../root'
 import {   
@@ -19,6 +19,7 @@ import { CeloContract } from '@celo/contractkit'
 import { toTxResult } from '@celo/contractkit/lib/utils/tx-result'
 import { Linking } from 'expo'
 import HelloWorldContract from '../contracts/HelloWorld.json'
+import Bienvenir from '../contracts/Bienvenir.json'
 
 // How to use AsyncStorage
 // AsyncStorage.setItem('cl_token', token)
@@ -43,7 +44,7 @@ const doCeloLogin = async dispatch => {
     const dappName = 'Bienvenir'
     const callback = Linking.makeUrl('/my/path')
     const networkId = await web3.eth.net.getId();
-    const deployedNetwork = HelloWorldContract.networks[networkId];
+    const deployedNetwork = Bienvenir.networks[networkId];
   
     requestAccountAddress({
       requestId,
@@ -70,14 +71,18 @@ const doCeloLogin = async dispatch => {
 
         //Creating Celo instance
         const instance = new web3.eth.Contract(
-            HelloWorldContract.abi,
+            Bienvenir.abi,
             deployedNetwork && deployedNetwork.address,
             { 
                 from: kit.defaultAccount
             }
         )
 
+        //store.setState({ address: dappkitResponse.address, phoneNumber: dappkitResponse.phoneNumber })
+
         let authentication = {
+            address: dappkitResponse.address,
+            phoneNumber: dappkitResponse.phoneNumber,
             'clLogin': 'SALIR',
             'clAddress': dappkitResponse.address,
             'clPhone': dappkitResponse.phoneNumber,
@@ -118,7 +123,7 @@ export const celoRead = () => async dispatch => {
     
     //Creating Celo instance
     const instance = new web3.eth.Contract(
-        HelloWorldContract.abi,
+        Bienvenir.abi,
         deployedNetwork && deployedNetwork.address,
         { 
             from: kit.defaultAccount

@@ -14,6 +14,13 @@ import { connect } from 'react-redux'
 import * as actions from '../actions'
 
 class OpenContractScreen extends Component {
+
+  componentDidMount() {
+    //this.props.celoGetCommitments()
+    this.props.celoSignCommitment(1)
+    //console.log('open_contract_screen', this.props.commitments)
+  }
+
   render() {
     return(
       <ScrollView
