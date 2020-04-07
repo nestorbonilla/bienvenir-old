@@ -25,20 +25,20 @@ class OpenContractDetailScreen extends Component {
     });
 
   render() {
-    const { id, title, description, steps } = this.props.route.params
+    const { id, name, description, steps } = this.props.route.params
     //console.log('contract_detail this.props ', this.props.route.params)
     return (
       <View>
         <List.Section
           titleNumberOfLines={10}
-          title={title}
+          title={name}
         >
           {steps.map((item, i) => {
           return (
             <List.Item
-              key={item.id}
+              key={item.name}
               titleNumberOfLines={10}
-              title={item.content}
+              title={item.name}
               style={styles.listItem}
               left={
                 props => <List.Icon {...props} icon="numeric-1-circle-outline" />
@@ -46,7 +46,7 @@ class OpenContractDetailScreen extends Component {
             />
           )})}
         </List.Section>
-        <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => console.log('Pressed')}>Firmar Compromiso</Button>
+        <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => this.props.celoSignCommitment({id})}>Firmar Compromiso</Button>
       </View>
     );
   }

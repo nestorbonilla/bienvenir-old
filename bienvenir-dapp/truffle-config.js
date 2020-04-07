@@ -33,5 +33,10 @@ module.exports = {
       provider: kit.web3.currentProvider, // CeloProvider
       network_id: 44786                   // Alfajores network id
     }
+  },
+  compilers:{
+    solc: {
+      version: "^0.6.0"
+    }
   }
 };

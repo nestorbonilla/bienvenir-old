@@ -16,8 +16,8 @@ contract Bienvenir {
 
     address public admin;
 
-    uint nextCommitmentId = 1;
-    uint nextSignedCommitmentId = 1;
+    uint nextCommitmentId = 0;
+    uint nextSignedCommitmentId = 0;
 
     mapping(uint => Commitment) public commitments;
     mapping(address => mapping(uint => SignedCommitment)) signedCommitments;
@@ -85,7 +85,6 @@ contract Bienvenir {
      * 3. Event Logs
      *_____________________________
      */
-     event LogNewBeneficiary(string _phone);
 
     /*_____________________________
      * 4. Function definition
@@ -94,21 +93,24 @@ contract Bienvenir {
 
     constructor() public {
         admin = msg.sender;
-        uint[] memory _typeSteps = new uint[](3);
-        _typeSteps[0] = 1;
-        _typeSteps[1] = 2;
-        _typeSteps[2] = 3;
-        uint[] memory _transferValues = new uint[](3);
+        uint[] memory _typeSteps = new uint[](4);
+        _typeSteps[0] = 1;                      //simple
+        _typeSteps[1] = 2;                      //value_required
+        _typeSteps[2] = 3;                      //automatic_transfer
+        _typeSteps[3] = 2;                      //value_required
+        uint[] memory _transferValues = new uint[](4);
         _transferValues[0] = 0;
         _transferValues[1] = 0;
         _transferValues[2] = 10000000000;
-        string[] memory _nameSteps = new string[](3);
-        _nameSteps[0] = 'step number 1';
-        _nameSteps[1] = 'step number 2';
-        _nameSteps[2] = 'step number 3';
+        _transferValues[3] = 0;
+        string[] memory _nameSteps = new string[](4);
+        _nameSteps[0] = 'Concluir el curso Iniciando Mi Proceso Migratorio.';
+        _nameSteps[1] = 'Completar y pasar prueba diagnostica del curso.';
+        _nameSteps[2] = 'Recibir transferencia de $300 para iniciar proceso regulatorio.';
+        _nameSteps[3] = 'Proveer resultados de proceso regulatorio en link digital.';
         createCommitment(
-            'commitment number 1',
-            'description from commitment number 1',
+            'Apoyo a migrantes en su solicitud de refugio',
+            'Este es un programa de apoyo a migrantes para su proceso regulatorio.',
             _typeSteps,
             _transferValues,
             _nameSteps
@@ -131,7 +133,6 @@ contract Bienvenir {
         string memory _phone
     ) public {
         beneficiaries[_beneficiary] = _phone;
-        emit LogNewBeneficiary(_phone);
     }
 
     /// @notice admin creates a commitment based on the previous agreement
@@ -143,16 +144,26 @@ contract Bienvenir {
     function createCommitment(
         string memory _name,
         string memory _description,
-        uint[] memory _typeSteps,
+        uint[] memory _stepTypes,
         uint[] memory _transferValues,
-        string[] memory _nameSteps
+        string[] memory _stepNames
     ) public onlyAdmin() {
         commitments[nextCommitmentId].id = nextCommitmentId;
         commitments[nextCommitmentId].name = _name;
         commitments[nextCommitmentId].description = _description;
         commitments[nextCommitmentId].creationDate = now;
-        for(uint i = 1; i <= _nameSteps.length; i++) {
-            commitments[nextCommitmentId].steps.push(Step(i, _typeSteps[i], _transferValues[i], _nameSteps[i]));
+
+        for(uint i = 0; i < _stepTypes.length; i++) {
+            Step memory _step;
+            _step.id = i;
+            _step.stepType = _stepTypes[i];
+            _step.transferValue = _transferValues[i];
+            _step.name = _stepNames[i];
+            commitments[nextCommitmentId].steps.push(_step);
+            //uint id;
+            //uint stepType; //simple, value_required, automatic_transfer
+            //uint transferValue; //Zero by default, when stepType is automatic_transfer the value need to be higher than zero
+            //string name;
         }
         nextCommitmentId++;
     }
@@ -162,20 +173,12 @@ contract Bienvenir {
     function getCommitments() public view returns (Commitment[] memory) {
         Commitment[] memory _commitments = new Commitment[](nextCommitmentId);
         for (uint i = 0; i < nextCommitmentId; i++) {
-        _commitments[i] = _commitments[i];
-    }
-        return _commitments;
-    }
-
-    /// @notice Each beneficiary can obtain a list of the commitments already signed.
-    /// @dev commitments can only be provided in array, not in mapping
-    function getSignedCommitments()
-        public view onlyBeneficiary()
-        returns (Commitment[] memory)
-    {
-        Commitment[] memory _commitments = new Commitment[](nextCommitmentId);
-        for (uint i = 0; i < nextCommitmentId; i++) {
-            _commitments[i] = _commitments[i];
+            _commitments[i].id = commitments[i].id;
+            _commitments[i].name = commitments[i].name;
+            _commitments[i].description = commitments[i].description;
+            _commitments[i].creationDate = commitments[i].creationDate;
+            _commitments[i].steps = commitments[i].steps;
+            _commitments[i].status = commitments[i].status;
         }
         return _commitments;
     }
@@ -189,6 +192,19 @@ contract Bienvenir {
         signedCommitments[msg.sender][nextSignedCommitmentId] = SignedCommitment(nextSignedCommitmentId, _commitmentId, now);
         accomplishments[msg.sender][nextSignedCommitmentId].push(Accomplishment(1, 1, now, 0, ''));
         nextSignedCommitmentId++;
+    }
+
+    /// @notice Each beneficiary can obtain a list of the commitments already signed.
+    /// @dev commitments can only be provided in array, not in mapping
+    function getSignedCommitments()
+        public view onlyBeneficiary()
+        returns (Commitment[] memory)
+    {
+        Commitment[] memory _commitments = new Commitment[](nextCommitmentId);
+        for (uint i = 0; i < nextCommitmentId; i++) {
+            _commitments[i] = _commitments[i];
+        }
+        return _commitments;
     }
 
     /// @notice beneficiary can sign a commitment
@@ -226,50 +242,5 @@ contract Bienvenir {
                 accomplishments[msg.sender][_signedCommitmentId].push(Accomplishment(_nextAccomplishmentId, i, now, 2, ''));
             }
         }
-    }
-
-    function testCollect(
-        uint _collectValue
-    ) public payable onlyOwnerOrAdmin() {
-        msg.sender.transfer(_collectValue);
-    }
-
-    function getBeneficiary(address _beneficiary) public view returns (string memory) {
-            return beneficiaries[_beneficiary];
-    }
-
-    //function getCommitment(uint _signedCommitmentId) public view returns (string memory) {
-    //    return uint2str(accomplishments[msg.sender][_signedCommitmentId].length);
-    //}
-
-    function getCommitment(uint _commitmentId) public view returns (Commitment memory) {
-        return commitments[_commitmentId];
-    }
-
-    function getSignedCommitment(uint _signedCommitmentId) public view returns (SignedCommitment memory) {
-        return signedCommitments[msg.sender][_signedCommitmentId];
-    }
-
-    function getCommitmentsCount() public view returns (uint) {
-        return nextCommitmentId - 1;
-    }
-
-    function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
-        if (_i == 0) {
-            return "0";
-        }
-        uint j = _i;
-        uint len;
-        while (j != 0) {
-            len++;
-            j /= 10;
-        }
-        bytes memory bstr = new bytes(len);
-        uint k = len - 1;
-        while (_i != 0) {
-            bstr[k--] = byte(uint8(48 + _i % 10));
-            _i /= 10;
-        }
-        return string(bstr);
     }
 }

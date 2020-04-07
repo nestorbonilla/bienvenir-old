@@ -26,73 +26,44 @@ import Bienvenir from '../contracts/Bienvenir.json'
 
 export const celoGetCommitments = () => async dispatch => {
     
-    //Creating Celo instance
-    // const instance = new web3.eth.Contract(
-    //     HelloWorldContract.abi,
-    //     deployedNetwork && deployedNetwork.address,
-    //     { 
-    //         from: kit.defaultAccount
-    //     }
-    // )
-
-    // let name = await instance.methods.getName().call()
-
-    let commitments = [
-        {
-            id: 1,
-            title: 'Apoyo a migrantes en su solicitud de refugio mod',
-            description: 'Este es un programa de apoyo a migrantes que desean conocer sus derechos y deberes en el pais receptor y desean apoyo en su proceso regulatorio.',
-            steps: [
-                {
-                    id: 1,
-                    content: 'Concluir el curso Iniciando mi proceso migratorio en la plataforma Bienvenir.'
-                },
-                {
-                    id: 2,
-                    content: 'Completar prueba diagnostica del curso Iniciando mi proceso migratorio en la plataforma Bienvenir y obtener como minimo 70% de puntaje.'
-                }
-            ]
-        },
-        {
-            id: 2,
-            title: 'Compromiso no. 2 mod',
-            description: 'Esta es una prueba',
-            steps: []
-        }
-    ]
-
-    const requestId = 'get_commitments'
-    const dappName = 'Bienvenir'
-    const callback = Linking.makeUrl('/my/path')
-    const networkId = await web3.eth.net.getId();
-    const deployedNetwork = Bienvenir.networks[networkId];
-
-    //Creating Celo instance
-    // const instance = new web3.eth.Contract(
-    //     Bienvenir.abi,
-    //     deployedNetwork && deployedNetwork.address,
-    //     { 
-    //         from: kit.defaultAccount
-    //     }
-    // )
-
-    let bvAddress = store.getState().auth.authentication.address
     let bvContract = store.getState().auth.authentication.clContract1
     
-    //let bvContract = instance
-    console.log('bv_address', bvAddress)
-    //console.log('bv_contract', bvContract)
-    //let contractCommitments = await bvContract.methods.getCommitments().call({ from: bvAddress })
-    //let contractCommitments = await bvContract.methods.getCommitments().call(bvAddress)
-    let contractCommitments = await bvContract.methods.getCommitments().call({from: bvAddress}, function(error, result) {})
-    //this.setState({ contractName: name })
-    
-    console.log('get_commitments_action', contractCommitments)
+    let bvCommitments = await bvContract.methods.getCommitments().call()
+    let commitments = [];
+
+    bvCommitments.forEach(commitment => {
+        let _id = parseInt(commitment[0]);
+        let _name = commitment[1];
+        let _description = commitment[2];
+        let _steps = [];
+        commitment[4].forEach(step => {
+            let _id = parseInt(step[0]);
+            let _stepType = parseInt(step[1]);      //simple, value_required, automatic_transfer
+            let _transferValue = parseInt(step[2]); //Zero by default, when stepType is automatic_transfer the value need to be higher than zero
+            let _name = step[3];
+            _steps.push({
+                id: _id,
+                stepType: _stepType,
+                transferValue: _transferValue,
+                name: _name
+            });
+        });
+        let _status = parseInt(commitment[5]);
+        commitments.push({
+            id: _id,
+            name: _name,
+            description: _description,
+            creationDate: 0,
+            steps: _steps,
+            status: _status
+        });
+    });
+
     dispatch({ type: CELO_FETCH_COMMITMENT_SUCCESS, commitments })
 }
 
 
-export const celoSignCommitment = () => async dispatch => {
+export const celoSignCommitment = (id) => async dispatch => {
     const requestId = 'sign_commitment'
     const dappName = 'Bienvenir'
     const callback = Linking.makeUrl('/my/path')
@@ -110,9 +81,10 @@ export const celoSignCommitment = () => async dispatch => {
         }
     )
 
+    console.log('celo_sign_commitment param id', id)
     console.log('celo_sign_commitment', 'starting')
 
-    const txObject = await bvContract.methods.createSignedCommitment(1)
+    const txObject = await instance.methods.createSignedCommitment(id)
 
     console.log('celo_sign_commitment', 'after txtObject')
 

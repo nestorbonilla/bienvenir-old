@@ -16,8 +16,8 @@ import * as actions from '../actions'
 class OpenContractScreen extends Component {
 
   componentDidMount() {
-    //this.props.celoGetCommitments()
-    this.props.celoSignCommitment(1)
+    this.props.celoGetCommitments()
+    //this.props.celoSignCommitment(1)
     //console.log('open_contract_screen', this.props.commitments)
   }
 
@@ -30,18 +30,18 @@ class OpenContractScreen extends Component {
         {this.props.commitments.map((item, i) => {
           return (
             <Card
-              key={item.title}
+              key={item.name}
               style={styles.card}
               onPress={() => {
                 this.props.navigation.navigate('openContractDetail', {
                   id: item.id,
-                  title: item.title,
+                  title: item.name,
                   description: item.description,
                   steps: item.steps
                 })
               }}
             >
-              <Card.Title title={item.title} />
+              <Card.Title title={item.name} />
               <Card.Content>
                 <Paragraph>{item.description}</Paragraph>
               </Card.Content>
