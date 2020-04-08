@@ -12,6 +12,7 @@ import {
 } from 'react-native-paper';
 import { connect } from 'react-redux'
 import * as actions from '../actions'
+import { t } from '../services/i18n'
 
 class OpenContractDetailScreen extends Component {
   
@@ -31,6 +32,7 @@ class OpenContractDetailScreen extends Component {
     return (
       <View>
         <List.Section
+          key={id}
           titleNumberOfLines={10}
           title={name}
         >
@@ -38,7 +40,7 @@ class OpenContractDetailScreen extends Component {
             let iconName = `numeric-${step.id + 1}-circle-outline`
             return (
               <List.Item
-                key={step.name}
+                key={step.id}
                 titleNumberOfLines={10}
                 title={step.name}
                 style={styles.listItem}
@@ -49,7 +51,7 @@ class OpenContractDetailScreen extends Component {
             )
           })}
         </List.Section>
-        <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => this.props.celoSignCommitment(id)}>Firmar Compromiso</Button>
+        <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => this.props.celoSignCommitment(id)}>{t('signCommitment')}</Button>
       </View>
     );
   }

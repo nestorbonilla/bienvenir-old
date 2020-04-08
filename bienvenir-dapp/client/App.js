@@ -1,5 +1,8 @@
+import { Updates } from 'expo'
 import React, { Component } from 'react'
-import { YellowBox } from 'react-native'
+import {
+  YellowBox,
+  I18nManager as RNI18nManager } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
@@ -16,6 +19,8 @@ import SignedContractDetailScreen from './screens/SignedContractDetailScreen'
 import ProfileScreen from './screens/ProfileScreen'
 import ProfileDetailScreen from './screens/ProfileDetailScreen'
 import ErrorBoundary from './components/ErrorBoundary'
+
+import i18n, { t } from './services/i18n';
 
 const Stack = createStackNavigator();
 const BottomTab = createMaterialBottomTabNavigator()
@@ -39,19 +44,23 @@ function HomeStack() {
 
 function ContractTopTab() {
   return(
-    <TopTab.Navigator>
+    <TopTab.Navigator
+      options={{
+        lazy: true,
+      }}
+    >
       <TopTab.Screen
         name="openContract"
         component={OpenContractScreen}
         options={{
-          title: 'Disponibles',
+          title: t('availables'),
         }}
       />
       <TopTab.Screen
         name="signedContract"
         component={SignedContractScreen}
         options={{
-          title: 'Firmados',
+          title: t('signed'),
         }}
       />
     </TopTab.Navigator>
@@ -65,21 +74,21 @@ function ContractStack() {
         name="contractTopTab"
         component={ContractTopTab}
         options={{
-          title: 'Compromisos',
+          title: t('commitments'),
         }}
       />
       <Stack.Screen
         name="openContractDetail"
         component={OpenContractDetailScreen}
         options={{
-          title: 'Pasos',
+          title: t('steps'),
         }}
       />
       <Stack.Screen
         name="signedContractDetail"
         component={SignedContractDetailScreen}
         options={{
-          title: 'Pasos a hacer',
+          title: t('stepsToDo'),
         }}
       />
     </Stack.Navigator>
@@ -93,14 +102,14 @@ function ProfileStack() {
         name="profile"
         component={ProfileScreen}
         options={{
-          title: 'Perfil',
+          title: t('profile'),
         }}
       />
       <Stack.Screen
         name="profileDetail"
         component={ProfileDetailScreen}
         options={{
-          title: 'Detalle',
+          title: t('detail'),
         }}
       />
     </Stack.Navigator>
@@ -118,6 +127,17 @@ function LogoTitle() {
 
 class App extends Component {
 
+  state = { isI18nInitialized: false }
+
+  componentDidMount() {
+    i18n.init()
+        .then(() => {
+
+            this.setState({ isI18nInitialized: true });
+        })
+        .catch((error) => console.warn(error));
+  }
+
   render() {
     return (
       <Provider store={store}>
@@ -131,7 +151,7 @@ class App extends Component {
                 name="home"
                 component={HomeStack}
                 options={{
-                  tabBarLabel: 'Inicio',
+                  tabBarLabel: t('home'),
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="home-outline" color={color} size={22} />
                   )
@@ -141,7 +161,7 @@ class App extends Component {
                 name="contracts"
                 component={ContractStack}
                 options={{
-                  tabBarLabel: 'Compromisos',
+                  tabBarLabel: t('commitments'),
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="script-text-outline" color={color} size={22} />
                   )
@@ -151,7 +171,7 @@ class App extends Component {
                 name="profiles"
                 component={ProfileStack}
                 options={{
-                  tabBarLabel: 'Perfil',
+                  tabBarLabel: t('profile'),
                   tabBarIcon: ({ color, size }) => (
                     <MaterialCommunityIcons name="face-outline" color={color} size={22} />
                   )

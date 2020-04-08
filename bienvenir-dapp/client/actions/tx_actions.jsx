@@ -51,10 +51,11 @@ export const celoCreateAssignment = (assignment) => async dispatch => {
     let bvAddress = store.getState().auth.authentication.address
     let bvContract = store.getState().auth.authentication.clContract1
 
-    const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(
-        assignment.signedCommitmentId,
-        assignment.stepId,
-        assignment.accomplishValue)
+    // const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(
+    //     assignment.signedCommitmentId,
+    //     assignment.stepId,
+    //     assignment.accomplishValue)
+    const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(assignment)
 
     console.log('assignment before send', assignment)
 
@@ -77,5 +78,5 @@ export const celoCreateAssignment = (assignment) => async dispatch => {
     const tx = dappkitResponse.rawTxs[0];
     let transaction = await toTxResult(kit.web3.eth.sendSignedTransaction(tx)).waitReceipt()
 
-    dispatch({ type: CELO_SIGN_COMMITMENT_SUCESS, transaction })
+    dispatch({ type: CELO_CREATE_ACCOMPLISHMENT_SUCESS, transaction })
 }

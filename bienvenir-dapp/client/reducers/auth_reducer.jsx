@@ -3,10 +3,11 @@ import {
     CELO_LOGIN_FAIL,
     CELO_LOGOUT_SUCCESS 
 } from '../actions/types'
+import { t } from '../services/i18n'
 
 const INITIAL_STATE = {
     authentication: {
-        clLogin: 'AUTENTICAR',
+        clLogin: 'AUTHORIZE',
         clAddress: '...',
         clBalance: '...',
         clDecimal: '...',

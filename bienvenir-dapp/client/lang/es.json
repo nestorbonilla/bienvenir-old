@@ -1,0 +1,28 @@
+{
+    "common": {
+        "home": "Inicio",
+        "commitments": "Compromisos",
+        "profile": "Perfil",
+        "login": "Autenticar",
+        "logout": "Salir",
+        "detail": "Detalle",
+        "steps": "Pasos",
+        "availables": "Disponibles",
+        "signed": "Firmados",
+        "stepsToDo": "Pasos a hacer",
+        "updateInformation": "Actualizar información",
+        "about": "Sobre Bienvenir",
+        "terms": "Términos y Condiciones",
+        "shareApp": "Comparte el App",
+        "rateUs": "Califícanos en el PlayStore",
+        "askUs": "Envíanos tus dudas",
+        "account": "Cuenta",
+        "others": "Otros",
+        "signCommitment": "Firmar Compromiso",
+        "information": "Informacion",
+        "informationRequired": "Por favor ingrese la informacion para completar el paso.",
+        "finalizeStep": "Concluir paso"
+    },
+    "lists": {
+    }
+}

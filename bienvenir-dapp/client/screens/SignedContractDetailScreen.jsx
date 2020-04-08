@@ -14,6 +14,7 @@ import DialogInput from 'react-native-dialog-input';
 import moment from 'moment'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
+import { t } from '../services/i18n'
 
 class SignedContractDetailScreen extends Component {
   
@@ -54,9 +55,9 @@ class SignedContractDetailScreen extends Component {
       this.showDialog(true) 
     } else {
       let assignment = {
-        signedCommitmentId: this.props.route.params.id,
-        stepId: this.props.route.params.id,
-        accomplishValue: ''
+        _signedCommitmentId: this.props.route.params.id,
+        _stepId: this.props.route.params.id,
+        _accomplishValue: ''
       }
       this.props.celoCreateAssignment(assignment)  
     }
@@ -70,9 +71,9 @@ class SignedContractDetailScreen extends Component {
     if (codeValidation) {
       let stepType = this.props.route.params.steps[this.props.route.params.id].stepType
       let assignment = {
-        assignmentsignedCommitmentId: this.props.route.params.id,
-        stepId: stepType,
-        accomplishValue: txValue
+        _assignmentsignedCommitmentId: this.props.route.params.id,
+        _stepId: stepType,
+        _accomplishValue: txValue
       }
       this.props.celoCreateAssignment(assignment)  
     }
@@ -122,10 +123,10 @@ class SignedContractDetailScreen extends Component {
           icon="check-decagram"
           style={styles.button}
           mode="contained" onPress={() => this.manageAccomplishment()}
-        >Concluir Paso</Button>
+        >{t('finalizeStep')}</Button>
         <DialogInput isDialogVisible={this.state.isDialogVisible}
-            title={"Informacion"}
-            message={"Por favor ingrese la informacion para completar el paso."}
+            title={t('information')}
+            message={t('informationRequired')}
             hintInput ={""}
             submitInput={ (txValue) => {this.sendTransactionWithValue(txValue)} }
             closeDialog={ () => {this.showDialog(false)}}>

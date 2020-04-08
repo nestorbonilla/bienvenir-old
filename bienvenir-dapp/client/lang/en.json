@@ -1,0 +1,29 @@
+{
+    "common": {
+        "home": "Home",
+        "commitments": "Commitments",
+        "profile": "Profile",
+        "login": "Log In",
+        "logout": "Log Out",
+        "detail": "Detail",
+        "steps": "Steps",
+        "availables": "Availables",
+        "signed": "Signed",
+        "stepsToDo": "Steps to do",
+        "updateInformation": "Update information",
+        "about": "About Bienvenir",
+        "terms": "Terms and conditions",
+        "shareApp": "Share the App",
+        "rateUs": "Rate us",
+        "askUs": "Send feedback",
+        "account": "Account",
+        "others": "Others",
+        "signCommitment": "Sign commitment",
+        "information": "Information",
+        "informationRequired": "Please add the information to complete this steps.",
+        "aboutApp": "Bienvenir is an automatic decentralized application to support migrants in their regulatory process.",
+        "finalizeStep": "Finalize step"
+    },
+    "lists": {
+    }
+}

@@ -42,8 +42,8 @@ doDestructureSignedCommitments = (commitments, bvSignedCommitments) => {
         let _signatureDate = parseInt(signedCommitment[2])
         let _nextAccomplishmentId = parseInt(signedCommitment[3])
 
-        console.log('commitmentId in loop', _commitmentId)
-        console.log('commitment in loop', commitments[_commitmentId])
+        //console.log('commitmentId in loop', _commitmentId)
+        //console.log('commitment in loop', commitments[_commitmentId])
         let _commitmentName = commitments[_commitmentId].name
         let _commitmentDescription = commitments[_commitmentId].description
         let _steps = []

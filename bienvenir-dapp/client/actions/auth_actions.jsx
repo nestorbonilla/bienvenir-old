@@ -16,6 +16,7 @@ import {
 } from '@celo/dappkit'
 import { Linking } from 'expo'
 import Bienvenir from '../contracts/Bienvenir.json'
+import { t } from '../services/i18n'
 
 // How to use AsyncStorage
 // AsyncStorage.setItem('cl_token', token)
@@ -77,7 +78,7 @@ const doCeloLogin = async dispatch => {
         let authentication = {
             address: dappkitResponse.address,
             phoneNumber: dappkitResponse.phoneNumber,
-            'clLogin': 'SALIR',
+            'clLogin': 'LOGOUT',
             'clAddress': dappkitResponse.address,
             'clPhone': dappkitResponse.phoneNumber,
             'clBalance': cUSDBalance,
@@ -100,7 +101,7 @@ export const celoLogout = () => async dispatch => {
     await AsyncStorage.setItem('cl_decimal', '')
 
     let authentication = {
-        'clLogin': 'AUTENTICAR',
+        'clLogin': 'AUTHORIZE',
         'clAddress': '...',
         'clBalance': '...',
         'clDecimal': '...',

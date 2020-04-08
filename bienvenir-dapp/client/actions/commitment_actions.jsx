@@ -43,7 +43,7 @@ export const celoGetCommitments = () => async dispatch => {
             _steps.push({
                 id: _id,
                 stepType: _stepType,
-                transferValue: _transferValue,
+                //transferValue: _transferValue,
                 name: _name
             });
         });

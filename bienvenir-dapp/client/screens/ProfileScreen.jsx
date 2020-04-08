@@ -11,6 +11,7 @@ import {
 import InfoText from '../components/InfoText'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
+import { t } from '../services/i18n'
 
 class ProfileScreen extends Component {
 
@@ -34,11 +35,11 @@ class ProfileScreen extends Component {
             </Text> */}
           </View>
         </View>
-        <InfoText text="Cuenta" />
+        <InfoText text={t('account')} />
         <View>
           <List.Section>
             <List.Item
-              title="Actualizar información"
+              title={t('updateInformation')}
               left={
                 props => <List.Icon {...props} icon="card-text-outline" />
               }
@@ -46,39 +47,39 @@ class ProfileScreen extends Component {
             />
           </List.Section>
         </View>
-        <InfoText text="Otros" />
+        <InfoText text={t('others')} />
         <View>
           <List.Section>
             <List.Item
-              title="Sobre Bienvenir"
+              title={t('about')}
               left={
                 props => <List.Icon {...props} icon="information-outline" />
               }
               onPress={() => {}}
             />
             <List.Item
-              title="Términos y Condiciones"
+              title={t('terms')}
               left={
                 props => <List.Icon {...props} icon="script-text-outline" />
               }
               onPress={() => {}}
             />
             <List.Item
-              title="Comparte el App"
+              title={t('shareApp')}
               left={
                 props => <List.Icon {...props} icon="share-variant" />
               }
               onPress={() => {}}
             />
             <List.Item
-              title="Califícanos en el PlayStore"
+              title={t('rateUs')}
               left={
                 props => <List.Icon {...props} icon="google-play" />
               }
               onPress={() => {}}
             />
             <List.Item
-              title="Envíanos un comentario"
+              title={t('askUs')}
               left={
                 props => <List.Icon {...props} icon="email-outline" />
               }

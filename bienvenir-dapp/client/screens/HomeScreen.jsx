@@ -1,10 +1,12 @@
 import React, { Component, useState } from 'react'
-import { Image, StyleSheet, Text, TextInput, View, YellowBox, TouchableOpacity, AsyncStorage } from 'react-native'
+import { Image, StyleSheet, View, YellowBox} from 'react-native'
 import {
-  Button
+  Button,
+  Paragraph
 } from 'react-native-paper'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
+import { t } from '../services/i18n'
 
 YellowBox.ignoreWarnings(['Warning: The provided value \'moz', 'Warning: The provided value \'ms-stream'])
 
@@ -23,6 +25,7 @@ class HomeScreen extends Component {
               () => this.manageLogin()
             }
           >{this.props.celo.clLogin}</Button>
+          <Paragraph style={styles.paragraph}>{t('aboutApp')}</Paragraph>
         {/* <Text>Dirección de cuenta:</Text>
         <Text>{this.props.celo.clAddress}</Text>
         <Text>Teléfono: {this.props.celo.clPhone}</Text>
@@ -32,7 +35,7 @@ class HomeScreen extends Component {
   }
 
   async manageLogin() {
-    if(this.props.celo.clLogin === 'AUTENTICAR') {
+    if(this.props.celo.clLogin === 'AUTHORIZE') {
       this.props.celoLogin()
     } else {
       this.props.celoLogout()
@@ -55,6 +58,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  paragraph: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    fontSize: 15,
+    color: '#777',
+    marginTop: 20,
+    marginLeft: 10,
+    marginRight: 10
   }
 });
 

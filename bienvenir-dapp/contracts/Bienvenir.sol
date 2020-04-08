@@ -91,20 +91,35 @@ contract Bienvenir {
         uint[] memory _transferValues = new uint[](4);
         _transferValues[0] = 0;
         _transferValues[1] = 0;
-        _transferValues[2] = 10000000000;
+        _transferValues[2] = 58490108815910000;    //around $10
         _transferValues[3] = 0;
+
+        //English version
         string[] memory _nameSteps = new string[](4);
-        _nameSteps[0] = 'Concluir el curso Iniciando Mi Proceso Migratorio.';
-        _nameSteps[1] = 'Completar y pasar prueba diagnostica del curso.';
-        _nameSteps[2] = 'Recibir transferencia de $300 para iniciar proceso regulatorio.';
-        _nameSteps[3] = 'Proveer resultados de proceso regulatorio en link digital.';
+        _nameSteps[0] = 'Conclude the course Starting My Migration Process.';
+        _nameSteps[1] = 'Complete and pass the diagnostic test of the course.';
+        _nameSteps[2] = 'Receive a transfer of $ 300 to start the regulatory process.';
+        _nameSteps[3] = 'Provide results of regulatory process in one digital link.';
         createCommitment(
-            'Apoyo a migrantes en su solicitud de refugio',
-            'Este es un programa de apoyo a migrantes para su proceso regulatorio.',
+            'Supporting migrants in their application for refuge',
+            'This is a program to support migrants for their regulatory process.',
             _typeSteps,
             _transferValues,
             _nameSteps
         );
+        //Spanish version
+        // string[] memory _nameSteps = new string[](4);
+        // _nameSteps[0] = 'Concluir el curso Iniciando Mi Proceso Migratorio.';
+        // _nameSteps[1] = 'Completar y pasar prueba diagnostica del curso.';
+        // _nameSteps[2] = 'Recibir transferencia de $300 para iniciar proceso regulatorio.';
+        // _nameSteps[3] = 'Proveer resultados de proceso regulatorio en link digital.';
+        // createCommitment(
+        //     'Apoyo a migrantes en su solicitud de refugio',
+        //     'Este es un programa de apoyo a migrantes para su proceso regulatorio.',
+        //     _typeSteps,
+        //     _transferValues,
+        //     _nameSteps
+        // );
     }
 
     function deposit() external payable {
