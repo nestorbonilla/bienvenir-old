@@ -21,9 +21,7 @@ contract Bienvenir {
 
     mapping(uint => Commitment) commitments;
     mapping(address => mapping(uint => SignedCommitment)) signedCommitments;
-    mapping(address => string) beneficiaries;
-
-    enum AccomplishmentChoices { Unassigned, Assigned, Incomplete, Complete }
+    mapping(address => bool) beneficiaries;
 
     struct Commitment {
         uint id;
@@ -68,12 +66,7 @@ contract Bienvenir {
     }
 
     modifier onlyBeneficiary() {
-        require(bytes(beneficiaries[msg.sender]).length != 0, 'only beneficiaries are allowed');
-        _;
-    }
-
-    modifier onlyOwnerOrAdmin() {
-        require(bytes(beneficiaries[msg.sender]).length != 0 || admin == msg.sender, 'only beneficiary or admin allowed');
+        require(beneficiaries[msg.sender] == true, 'only beneficiaries are allowed');
         _;
     }
 
@@ -81,6 +74,7 @@ contract Bienvenir {
      * 3. Event Logs
      *_____________________________
      */
+     // Not needed with Celo
 
     /*_____________________________
      * 4. Function definition
@@ -120,11 +114,10 @@ contract Bienvenir {
     ///         and adds its accomplishments.
     /// @dev beneficiary must be provided as an address
     /// @param _beneficiary The address of a beneficiary
-    function addBeneficiary(
-        address _beneficiary,
-        string memory _phone
+    function createBeneficiary(
+        address _beneficiary
     ) public {
-        beneficiaries[_beneficiary] = _phone;
+        beneficiaries[_beneficiary] = true;
     }
 
     /// @notice admin creates a commitment based on the previous agreement
@@ -176,22 +169,37 @@ contract Bienvenir {
     /// @param  _commitmentId The id of the available commitment
     function createSignedCommitment(
         uint _commitmentId
-    ) public { //onlyBeneficiary() {
-        signedCommitments[msg.sender][nextSignedCommitmentId].id = nextSignedCommitmentId;
-        signedCommitments[msg.sender][nextSignedCommitmentId].commitmentId = _commitmentId;
-        signedCommitments[msg.sender][nextSignedCommitmentId].signatureDate = now;
-        signedCommitments[msg.sender][nextSignedCommitmentId].nextAccomplishmentId = 0;
+    ) public {
 
-        //Adding first default accomplishment
-        Accomplishment memory _accomplishment;
-        _accomplishment.id = 0;
-        _accomplishment.stepId = 0;
-        _accomplishment.accomplishDate = now;
-        _accomplishment.accomplishmentCategory = 1;
-        _accomplishment.accomplishValue = '';
-        signedCommitments[msg.sender][nextSignedCommitmentId].accomplishments.push(_accomplishment);
+        //Only one signed commitment per commitment per beneficiary
+        bool _available = true;
+        for (uint i = 0; i < nextSignedCommitmentId; i++) {
+            if(signedCommitments[msg.sender][i].commitmentId == _commitmentId) {
+                _available = false;
+            }
+        }
 
-        nextSignedCommitmentId++;
+        if(_available) {
+            //Every time someone sign a commitment he/she converts into a beneficiary
+            createBeneficiary(msg.sender);
+
+            signedCommitments[msg.sender][nextSignedCommitmentId].id = nextSignedCommitmentId;
+            signedCommitments[msg.sender][nextSignedCommitmentId].commitmentId = _commitmentId;
+            signedCommitments[msg.sender][nextSignedCommitmentId].signatureDate = now;
+            signedCommitments[msg.sender][nextSignedCommitmentId].nextAccomplishmentId = 0;
+
+            //Adding first default accomplishment
+            Accomplishment memory _accomplishment;
+            _accomplishment.id = 0;
+            _accomplishment.stepId = 0;
+            _accomplishment.accomplishDate = now;
+            _accomplishment.accomplishmentCategory = 1;
+            _accomplishment.accomplishValue = '';
+            signedCommitments[msg.sender][nextSignedCommitmentId].accomplishments.push(_accomplishment);
+
+            nextSignedCommitmentId++;
+        }
+
     }
 
     /// @notice Each beneficiary can obtain a list of the commitments already signed.
@@ -218,7 +226,7 @@ contract Bienvenir {
         uint _signedCommitmentId,
         uint _stepId,
         string memory _accomplishValue
-    ) public payable onlyOwnerOrAdmin() {
+    ) public payable onlyBeneficiary() {
         //Get length of the accomplishments
         uint _nextAccomplishmentId = signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId;
 

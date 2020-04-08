@@ -14,14 +14,24 @@ import '../global'
 
 export const celoGetSignedCommitments = () => async dispatch => {
     
-    let bvContract = store.getState().auth.authentication.clContract1
+    //let currentState = await store.getState()
+
+    let bvContract = await store.getState().auth.authentication.clContract1
     
+
     let bvSignedCommitments = await bvContract.methods.getSignedCommitments().call()
-    let commitments = await store.getState().commitment.commitments
     let signedCommitments = []
 
-    //console.log('commitments from state', commitments)
-    //console.log('signed commitments from blockchain', bvSignedCommitments)
+    let commitments = await store.getState().commitment.commitments
+    
+    signedCommitments = doDestructureSignedCommitments(commitments, bvSignedCommitments)
+
+    dispatch({ type: CELO_FETCH_SIGNED_COMMITMENT_SUCCESS, signedCommitments })
+}
+
+doDestructureSignedCommitments = (commitments, bvSignedCommitments) => {
+
+    let signedCommitments = []
 
     bvSignedCommitments.forEach(signedCommitment => {
         
@@ -33,7 +43,7 @@ export const celoGetSignedCommitments = () => async dispatch => {
         let _nextAccomplishmentId = parseInt(signedCommitment[3])
 
         console.log('commitmentId in loop', _commitmentId)
-        console.log('commitment in loop', commitments[_commitmentId].name)
+        console.log('commitment in loop', commitments[_commitmentId])
         let _commitmentName = commitments[_commitmentId].name
         let _commitmentDescription = commitments[_commitmentId].description
         let _steps = []
@@ -87,6 +97,5 @@ export const celoGetSignedCommitments = () => async dispatch => {
         })
     })
     console.log('final_signed_commitments', signedCommitments)
-
-    dispatch({ type: CELO_FETCH_SIGNED_COMMITMENT_SUCCESS, signedCommitments })
+    return signedCommitments
 }

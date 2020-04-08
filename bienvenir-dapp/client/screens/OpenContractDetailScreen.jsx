@@ -21,6 +21,7 @@ class OpenContractDetailScreen extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps){
     if(nextProps.transaction.status){
+      this.props.celoGetSignedCommitments()
       this.props.navigation.navigate('signedContract')
     }
   }
@@ -33,18 +34,20 @@ class OpenContractDetailScreen extends Component {
           titleNumberOfLines={10}
           title={name}
         >
-          {steps.map((item, i) => {
-          return (
-            <List.Item
-              key={item.name}
-              titleNumberOfLines={10}
-              title={item.name}
-              style={styles.listItem}
-              left={
-                props => <List.Icon {...props} icon="numeric-1-circle-outline" />
-              }
-            />
-          )})}
+          {steps.map((step, i) => {
+            let iconName = `numeric-${step.id + 1}-circle-outline`
+            return (
+              <List.Item
+                key={step.name}
+                titleNumberOfLines={10}
+                title={step.name}
+                style={styles.listItem}
+                left={
+                  props => <List.Icon {...props} icon={iconName} />
+                }
+              />
+            )
+          })}
         </List.Section>
         <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => this.props.celoSignCommitment(id)}>Firmar Compromiso</Button>
       </View>
