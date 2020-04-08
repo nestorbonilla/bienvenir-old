@@ -51,14 +51,15 @@ export const celoCreateAssignment = (assignment) => async dispatch => {
     let bvAddress = store.getState().auth.authentication.address
     let bvContract = store.getState().auth.authentication.clContract1
 
-    // const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(
-    //     assignment.signedCommitmentId,
-    //     assignment.stepId,
-    //     assignment.accomplishValue)
-    const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(assignment)
+    const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(
+        assignment.signedCommitmentId,
+        assignment.stepId,
+        assignment.accomplishValue)
+    
+    //Error: Invalid number of parameters for "createSignedCommitmentAccomplishment". Got 1 expected 3!
+    //const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(assignment)
 
     console.log('assignment before send', assignment)
-
     console.log('assignment tx before send', txObject)
 
     requestTxSig(

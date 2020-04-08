@@ -55,9 +55,9 @@ class SignedContractDetailScreen extends Component {
       this.showDialog(true) 
     } else {
       let assignment = {
-        _signedCommitmentId: this.props.route.params.id,
-        _stepId: this.props.route.params.id,
-        _accomplishValue: ''
+        signedCommitmentId: this.props.route.params.id,
+        stepId: 0,
+        accomplishValue: ''
       }
       this.props.celoCreateAssignment(assignment)  
     }
@@ -71,9 +71,9 @@ class SignedContractDetailScreen extends Component {
     if (codeValidation) {
       let stepType = this.props.route.params.steps[this.props.route.params.id].stepType
       let assignment = {
-        _assignmentsignedCommitmentId: this.props.route.params.id,
-        _stepId: stepType,
-        _accomplishValue: txValue
+        signedCommitmentId: this.props.route.params.id,
+        stepId: 0,
+        accomplishValue: txValue
       }
       this.props.celoCreateAssignment(assignment)  
     }
@@ -82,6 +82,7 @@ class SignedContractDetailScreen extends Component {
 
   render() {
     const { id, name, steps } = this.props.route.params
+    console.log('steps inside signed screen', steps)
     return (
       <View>
         <List.Section
@@ -92,6 +93,7 @@ class SignedContractDetailScreen extends Component {
             let iconName = `numeric-${step.id + 1}-circle-outline`
             return (
               <List.Accordion
+                key={step.id}
                 titleNumberOfLines={10}
                 title={step.name}
                 style={styles.listAccordion}
@@ -105,7 +107,7 @@ class SignedContractDetailScreen extends Component {
                   let accomplishmentName = `${status} el ${time}`
                   return (
                     <List.Item
-                      key={i}
+                      key={accomplishment.id}
                       titleNumberOfLines={10}
                       title={accomplishmentName}
                       style={styles.listItem}
