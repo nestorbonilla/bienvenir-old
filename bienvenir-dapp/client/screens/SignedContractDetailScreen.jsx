@@ -54,8 +54,8 @@ class SignedContractDetailScreen extends Component {
       this.showDialog(true) 
     } else {
       let assignment = {
-        assignmentsignedCommitmentId: this.props.route.params.id,
-        stepId: stepType,
+        signedCommitmentId: this.props.route.params.id,
+        stepId: this.props.route.params.id,
         accomplishValue: ''
       }
       this.props.celoCreateAssignment(assignment)  

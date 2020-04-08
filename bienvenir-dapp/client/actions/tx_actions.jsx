@@ -52,9 +52,13 @@ export const celoCreateAssignment = (assignment) => async dispatch => {
     let bvContract = store.getState().auth.authentication.clContract1
 
     const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(
-        assignment.assignmentsignedCommitmentId,
+        assignment.signedCommitmentId,
         assignment.stepId,
         assignment.accomplishValue)
+
+    console.log('assignment before send', assignment)
+
+    console.log('assignment tx before send', txObject)
 
     requestTxSig(
         kit,
