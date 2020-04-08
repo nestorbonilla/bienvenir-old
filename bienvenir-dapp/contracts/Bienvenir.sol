@@ -19,9 +19,8 @@ contract Bienvenir {
     uint nextCommitmentId = 0;
     uint nextSignedCommitmentId = 0;
 
-    mapping(uint => Commitment) public commitments;
+    mapping(uint => Commitment) commitments;
     mapping(address => mapping(uint => SignedCommitment)) signedCommitments;
-    mapping(address => mapping(uint => Accomplishment[])) accomplishments;
     mapping(address => string) beneficiaries;
 
     enum AccomplishmentChoices { Unassigned, Assigned, Incomplete, Complete }
@@ -37,8 +36,8 @@ contract Bienvenir {
 
     struct Step {
         uint id;
-        uint stepType; //simple, value_required, automatic_transfer
-        uint transferValue; //Zero by default, when stepType is automatic_transfer the value need to be higher than zero
+        uint stepType;                  //simple, value_required, automatic_transfer
+        uint transferValue;             //Zero by default, when stepType is automatic_transfer the value need to be higher than zero
         string name;
     }
 
@@ -46,19 +45,16 @@ contract Bienvenir {
         uint id;
         uint commitmentId;
         uint signatureDate;
+        uint nextAccomplishmentId;
+        Accomplishment[] accomplishments;
     }
 
     struct Accomplishment {
         uint id;
         uint stepId;
         uint accomplishDate;
-        uint accomplishmentCategory; //started, finished
+        uint accomplishmentCategory;    //started, finished
         string accomplishValue;
-    }
-
-    struct Profile {
-        string phone;
-        address profileAddress;
     }
 
     /*_____________________________
@@ -120,10 +116,6 @@ contract Bienvenir {
     function deposit() external payable {
     }
 
-    function balanceOf() external view returns(uint) {
-        return address(this).balance;
-    }
-
     /// @notice beneficiary adds its address to be able to sign a commitment
     ///         and adds its accomplishments.
     /// @dev beneficiary must be provided as an address
@@ -160,10 +152,6 @@ contract Bienvenir {
             _step.transferValue = _transferValues[i];
             _step.name = _stepNames[i];
             commitments[nextCommitmentId].steps.push(_step);
-            //uint id;
-            //uint stepType; //simple, value_required, automatic_transfer
-            //uint transferValue; //Zero by default, when stepType is automatic_transfer the value need to be higher than zero
-            //string name;
         }
         nextCommitmentId++;
     }
@@ -188,9 +176,21 @@ contract Bienvenir {
     /// @param  _commitmentId The id of the available commitment
     function createSignedCommitment(
         uint _commitmentId
-    ) public onlyBeneficiary() {
-        signedCommitments[msg.sender][nextSignedCommitmentId] = SignedCommitment(nextSignedCommitmentId, _commitmentId, now);
-        accomplishments[msg.sender][nextSignedCommitmentId].push(Accomplishment(1, 1, now, 0, ''));
+    ) public { //onlyBeneficiary() {
+        signedCommitments[msg.sender][nextSignedCommitmentId].id = nextSignedCommitmentId;
+        signedCommitments[msg.sender][nextSignedCommitmentId].commitmentId = _commitmentId;
+        signedCommitments[msg.sender][nextSignedCommitmentId].signatureDate = now;
+        signedCommitments[msg.sender][nextSignedCommitmentId].nextAccomplishmentId = 0;
+
+        //Adding first default accomplishment
+        Accomplishment memory _accomplishment;
+        _accomplishment.id = 0;
+        _accomplishment.stepId = 0;
+        _accomplishment.accomplishDate = now;
+        _accomplishment.accomplishmentCategory = 1;
+        _accomplishment.accomplishValue = '';
+        signedCommitments[msg.sender][nextSignedCommitmentId].accomplishments.push(_accomplishment);
+
         nextSignedCommitmentId++;
     }
 
@@ -198,48 +198,74 @@ contract Bienvenir {
     /// @dev commitments can only be provided in array, not in mapping
     function getSignedCommitments()
         public view onlyBeneficiary()
-        returns (Commitment[] memory)
+        returns (SignedCommitment[] memory)
     {
-        Commitment[] memory _commitments = new Commitment[](nextCommitmentId);
+        SignedCommitment[] memory _signedCommitments = new SignedCommitment[](nextSignedCommitmentId);
         for (uint i = 0; i < nextCommitmentId; i++) {
-            _commitments[i] = _commitments[i];
+            _signedCommitments[i].id = signedCommitments[msg.sender][i].id;
+            _signedCommitments[i].commitmentId = signedCommitments[msg.sender][i].commitmentId;
+            _signedCommitments[i].signatureDate = signedCommitments[msg.sender][i].signatureDate;
+            _signedCommitments[i].nextAccomplishmentId = signedCommitments[msg.sender][i].nextAccomplishmentId;
+            _signedCommitments[i].accomplishments = signedCommitments[msg.sender][i].accomplishments;
         }
-        return _commitments;
+        return _signedCommitments;
     }
 
     /// @notice beneficiary can sign a commitment
     /// @dev beneficiary sign a commitment to be able to accomplish its requisites and obtain the benefits
     /// @param  _signedCommitmentId The id of the available commitment
-    function completeSignedCommitmentAccomplishment(
+    function createSignedCommitmentAccomplishment(
         uint _signedCommitmentId,
         uint _stepId,
         string memory _accomplishValue
     ) public payable onlyOwnerOrAdmin() {
         //Get length of the accomplishments
-        uint _nextAccomplishmentId = accomplishments[msg.sender][_signedCommitmentId].length;
+        uint _nextAccomplishmentId = signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId;
 
         //Push a new accomplishment of conclusion, accomplishmentCategory 2
-        accomplishments[msg.sender][_signedCommitmentId].push(Accomplishment(_nextAccomplishmentId, _stepId, now, 2, _accomplishValue));
-        _nextAccomplishmentId++;
+        Accomplishment memory _accomplishment;
+        _accomplishment.id = _nextAccomplishmentId;
+        _accomplishment.stepId = _stepId;
+        _accomplishment.accomplishDate = now;
+        _accomplishment.accomplishmentCategory = 2;                         //finished
+        _accomplishment.accomplishValue = _accomplishValue;
+        signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_accomplishment);
+        signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId + 1;
 
         //Loop to verify if there are more steps to complete
         //and if its type is aumatic_transfer then transfer the ammount placed on the value to the beneficiary wallet
         for(uint i = _stepId; i < commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps.length; i++) {
+
+            //Start the next step, creating a new Accomplismenth with category 1
+            uint _nextLoopAccomplishmentId = signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId;
+            Accomplishment memory _loopAccomplishment;
+            _loopAccomplishment.id = _nextLoopAccomplishmentId;
+            _loopAccomplishment.stepId = i;
+            _loopAccomplishment.accomplishDate = now;
+            _loopAccomplishment.accomplishmentCategory = 1;                 //started
+            _loopAccomplishment.accomplishValue = _accomplishValue;
+            signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_loopAccomplishment);
+            signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextLoopAccomplishmentId + 1;
+
             if(commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].stepType == 3) { //automatic_transfer
-                //Push a new accomplishment of initialization, accomplishmentCategory 1
-                accomplishments[msg.sender][_signedCommitmentId].push(Accomplishment(_nextAccomplishmentId, i, now, 1, ''));
 
                 //Automatic transfer from contract to beneficiary address with an ammount of transferValue from Commitment Step
                 if(address(this).balance >= commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue) {
                     msg.sender.transfer(commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue);
                 } else {
+                    //Not enough funds
                     break;
                 }
 
-                _nextAccomplishmentId++;
-
-                //Push a new accomplishment of conclusion, accomplishmentCategory 2
-                accomplishments[msg.sender][_signedCommitmentId].push(Accomplishment(_nextAccomplishmentId, i, now, 2, ''));
+                uint _nextAutomaticAccomplishmentId = signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId;
+                Accomplishment memory _automaticAccomplishment;
+                _automaticAccomplishment.id = _nextAutomaticAccomplishmentId;
+                _automaticAccomplishment.stepId = i;
+                _automaticAccomplishment.accomplishDate = now;
+                _automaticAccomplishment.accomplishmentCategory = 2;        //finished
+                _automaticAccomplishment.accomplishValue = 'transfer complete';
+                signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_automaticAccomplishment);
+                signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAutomaticAccomplishmentId + 1;
             }
         }
     }

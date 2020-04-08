@@ -23,18 +23,18 @@ class SignedContractScreen extends Component {
         {this.props.commitments.map((item, i) => {
           return (
             <Card
-              key={item.title}
+              key={item.name}
               style={styles.card}
               onPress={() => {
                 this.props.navigation.navigate('signedContractDetail', {
                   id: item.id,
-                  title: item.title,
+                  title: item.name,
                   description: item.description,
                   steps: item.steps
                 })
               }}
             >
-              <Card.Title title={item.title} />
+              <Card.Title title={item.name} />
               <Card.Content>
                 <Paragraph>{item.description}</Paragraph>
               </Card.Content>
