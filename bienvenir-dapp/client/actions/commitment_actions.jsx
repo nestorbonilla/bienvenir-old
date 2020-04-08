@@ -26,7 +26,7 @@ import Bienvenir from '../contracts/Bienvenir.json'
 
 export const celoGetCommitments = () => async dispatch => {
     
-    let bvContract = store.getState().auth.authentication.clContract1  
+    let bvContract = store.getState().auth.authentication.clContract1
     let bvCommitments = await bvContract.methods.getCommitments().call()
     let commitments = [];
 

@@ -5,7 +5,6 @@ import {
     CELO_LOGIN_FAIL,
     CELO_LOGOUT_SUCCESS,
 } from './types'
-import store from '../store';
 import '../global'
 import { web3, kit } from '../root'
 import {   
@@ -15,10 +14,7 @@ import {
     waitForAccountAuth,
     FeeCurrency
 } from '@celo/dappkit'
-import { CeloContract } from '@celo/contractkit'
-import { toTxResult } from '@celo/contractkit/lib/utils/tx-result'
 import { Linking } from 'expo'
-import HelloWorldContract from '../contracts/HelloWorld.json'
 import Bienvenir from '../contracts/Bienvenir.json'
 
 // How to use AsyncStorage
@@ -78,8 +74,6 @@ const doCeloLogin = async dispatch => {
             }
         )
 
-        //store.setState({ address: dappkitResponse.address, phoneNumber: dappkitResponse.phoneNumber })
-
         let authentication = {
             address: dappkitResponse.address,
             phoneNumber: dappkitResponse.phoneNumber,
@@ -117,19 +111,4 @@ export const celoLogout = () => async dispatch => {
     }
     
     dispatch({ type: CELO_LOGOUT_SUCCESS, authentication })
-}
-
-export const celoRead = () => async dispatch => {
-    
-    //Creating Celo instance
-    const instance = new web3.eth.Contract(
-        Bienvenir.abi,
-        deployedNetwork && deployedNetwork.address,
-        { 
-            from: kit.defaultAccount
-        }
-    )
-
-    let name = await instance.methods.getName().call()
-    dispatch({ type: CELO_LOGIN_SUCCESS, name })
 }

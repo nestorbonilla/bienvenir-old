@@ -10,6 +10,7 @@ import {
   List,
   Theme,
 } from 'react-native-paper';
+import moment from 'moment'
 import { connect } from 'react-redux'
 import * as actions from '../actions'
 
@@ -25,57 +26,45 @@ class SignedContractDetailScreen extends Component {
     });
 
   render() {
+    const { id, name, steps } = this.props.route.params
     return (
       <View>
-        <List.Section title="Compromiso no. 1">
-          <List.Accordion
-            titleNumberOfLines={10}
-            title="Concluir el curso 'Iniciando mi proceso migratorio' en la plataforma Bienvenir."
-            style={styles.listAccordion}
-            left={
-              props => <List.Icon {...props} icon="numeric-1-circle-outline" />
-            }
-          >
-            <List.Item
-              title="Iniciado por Nestor Bonilla. | 12-04-2020 03:00 PM"
-              titleNumberOfLines={5}
-              left={
-                props => <List.Icon {...props} color="#FFCC25" style={styles.listItem} icon="alarm" />
-              }
-            />
-            <List.Item
-              title="Finalizado por Nestor Bonilla. | 13-04-2020 05:00 PM"
-              titleNumberOfLines={5}
-              left={
-                props => <List.Icon {...props} color="#FFCC25" style={styles.listItem} icon="alarm" />
-              }
-            />
-          </List.Accordion>
-
-          <List.Accordion
-            titleNumberOfLines={10}
-            title="Completar prueba diagnostica del curso 'Iniciando mi proceso migratorio' en la plataforma Bienvenir y obtener como minimo 70% de puntaje."
-            left={
-              props => <List.Icon {...props} icon="numeric-2-circle-outline" />
-            }
-          >
-            <List.Item
-              title="Iniciado por Nestor Bonilla. | 12-04-2020 03:00 PM"
-              titleNumberOfLines={5}
-              left={
-                props => <List.Icon {...props} color="#FFCC25" style={styles.listItem} icon="alarm" />
-              }
-            />
-            <List.Item
-              title="Finalizado por Nestor Bonilla. | 13-04-2020 05:00 PM"
-              titleNumberOfLines={5}
-              left={
-                props => <List.Icon {...props} color="#FFCC25" style={styles.listItem} icon="alarm" />
-              }
-            />
-          </List.Accordion>
+        <List.Section
+          titleNumberOfLines={10}
+          title={name}
+        >
+          {steps.map((step, i) => {
+            let iconName = `numeric-${step.id + 1}-circle-outline`
+            return (
+              <List.Accordion
+                titleNumberOfLines={10}
+                title={step.name}
+                style={styles.listAccordion}
+                left={
+                  props => <List.Icon {...props} icon={iconName} />
+                }
+              >
+                {step.accomplishments.map((accomplishment, i) => {
+                  let status = (accomplishment.accomplishmentCategory == 1) ? 'Iniciado' : 'Finalizado'
+                  let time = moment.unix(accomplishment.accomplishDate).format("DD-MM-YYYY");
+                  let accomplishmentName = `${status} el ${time}`
+                  return (
+                    <List.Item
+                      key={i}
+                      titleNumberOfLines={10}
+                      title={accomplishmentName}
+                      style={styles.listItem}
+                      left={
+                        props => <List.Icon {...props} icon="alarm" />
+                      }
+                    />
+                  )
+                })}
+              </List.Accordion>
+            )
+          })}
         </List.Section>
-        <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => console.log('Pressed')}>Completar Paso</Button>
+        <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => this.props.celoSignCommitment(id)}>Concluir Paso</Button>
       </View>
     );
   }
@@ -114,7 +103,7 @@ function mapStateToProps(props) {
   //console.log('celo_contract', props.commitment.commitments)
   return {
     celo: props.auth.authentication,
-    commitments: props.commitment.commitments
+    signedCommitments: props.signedCommitment.signedCommitments
   }
 }
 

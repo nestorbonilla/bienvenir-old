@@ -33,7 +33,7 @@ class SignedContractScreen extends Component {
               onPress={() => {
                 this.props.navigation.navigate('signedContractDetail', {
                   id: item.id,
-                  title: item.name,
+                  name: item.name,
                   description: item.description,
                   steps: item.steps
                 })
