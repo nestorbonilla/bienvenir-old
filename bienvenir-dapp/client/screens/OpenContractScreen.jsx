@@ -17,8 +17,6 @@ class OpenContractScreen extends Component {
 
   componentDidMount() {
     this.props.celoGetCommitments()
-    //this.props.celoSignCommitment(1)
-    //console.log('open_contract_screen', this.props.commitments)
   }
 
   render() {
@@ -67,7 +65,6 @@ const styles = StyleSheet.create({
 })
 
 function mapStateToProps(props) {
-  //console.log('celo_contract', props.commitment.commitments)
   return {
     celo: props.auth.authentication,
     commitments: props.commitment.commitments

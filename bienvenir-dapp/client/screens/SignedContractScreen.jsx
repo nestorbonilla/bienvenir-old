@@ -14,16 +14,21 @@ import { connect } from 'react-redux'
 import * as actions from '../actions'
 
 class SignedContractScreen extends Component {
+
+  componentDidMount() {
+    this.props.celoGetSignedCommitments()
+  }
+  
   render() {
     return(
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
       >
-        {this.props.commitments.map((item, i) => {
+        {this.props.signedCommitments.map((item, i) => {
           return (
             <Card
-              key={item.name}
+              key={i}
               style={styles.card}
               onPress={() => {
                 this.props.navigation.navigate('signedContractDetail', {
@@ -63,7 +68,7 @@ function mapStateToProps(props) {
   //console.log('celo_contract', props.commitment.commitments)
   return {
     celo: props.auth.authentication,
-    commitments: props.commitment.commitments
+    signedCommitments: props.signedCommitment.signedCommitments
   }
 }
 

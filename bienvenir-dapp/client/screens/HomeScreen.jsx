@@ -33,8 +33,6 @@ class HomeScreen extends Component {
   }
 
   async manageLogin() {
-
-    console.log('CELO_LOGIN', this.props.celo.clLogin)
     if(this.props.celo.clLogin === 'AUTENTICAR') {
       this.props.celoLogin()
     } else {
@@ -62,7 +60,6 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(props) {
-  //console.log('celo_auth', props.auth.authentication)
   return {
     celo: props.auth.authentication
   }

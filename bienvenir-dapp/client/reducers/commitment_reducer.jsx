@@ -4,7 +4,8 @@ import {
 } from '../actions/types'
 
 const INITIAL_STATE = {
-    commitments: []
+    commitments: [],
+    transaction: {}
 }
 export default function(state = INITIAL_STATE, action) {
     switch (action.type) {

@@ -19,14 +19,14 @@ class OpenContractDetailScreen extends Component {
     expanded: true
   }
 
-  _handlePress = () =>
-    this.setState({
-      expanded: !this.state.expanded
-    });
+  UNSAFE_componentWillReceiveProps(nextProps){
+    if(nextProps.transaction.status){
+      this.props.navigation.navigate('signedContract')
+    }
+  }
 
   render() {
-    const { id, name, description, steps } = this.props.route.params
-    //console.log('contract_detail this.props ', this.props.route.params)
+    const { id, name, steps } = this.props.route.params
     return (
       <View>
         <List.Section
@@ -46,7 +46,7 @@ class OpenContractDetailScreen extends Component {
             />
           )})}
         </List.Section>
-        <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => this.props.celoSignCommitment({id})}>Firmar Compromiso</Button>
+        <Button icon="check-decagram" style={styles.button} mode="contained" onPress={() => this.props.celoSignCommitment(id)}>Firmar Compromiso</Button>
       </View>
     );
   }
@@ -80,10 +80,10 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(props) {
-  //console.log('all props', props)
   return {
     celo: props.auth.authentication,
-    commitments: props.commitment.commitments
+    commitments: props.commitment.commitments,
+    transaction: props.tx.transaction
   }
 }
 
