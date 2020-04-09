@@ -2,7 +2,9 @@ import { AsyncStorage} from 'react-native'
 
 import {
     CELO_SIGN_COMMITMENT_SUCESS,
-    CELO_SIGN_COMMITMENT_FAIL
+    CELO_SIGN_COMMITMENT_FAIL,
+    CELO_CREATE_ACCOMPLISHMENT_SUCESS,
+    CELO_CREATE_ACCOMPLISHMENT_FAIL
 } from './types'
 import store from '../store';
 import '../global'
@@ -55,6 +57,11 @@ export const celoCreateAssignment = (assignment) => async dispatch => {
         assignment.signedCommitmentId,
         assignment.stepId,
         assignment.accomplishValue)
+        
+    // const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(
+    //     assignment.signedCommitmentId,
+    //     assignment.stepId,
+    //     assignment.accomplishValue)
     
     //Error: Invalid number of parameters for "createSignedCommitmentAccomplishment". Got 1 expected 3!
     //const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(assignment)

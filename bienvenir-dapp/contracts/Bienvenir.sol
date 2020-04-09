@@ -43,6 +43,7 @@ contract Bienvenir {
         uint id;
         uint commitmentId;
         uint signatureDate;
+        uint currentStep;
         uint nextAccomplishmentId;
         Accomplishment[] accomplishments;
     }
@@ -91,7 +92,7 @@ contract Bienvenir {
         uint[] memory _transferValues = new uint[](4);
         _transferValues[0] = 0;
         _transferValues[1] = 0;
-        _transferValues[2] = 58490108815910000;    //around $10
+        _transferValues[2] = 11524205829552600;    //around $2
         _transferValues[3] = 0;
 
         //English version
@@ -201,7 +202,8 @@ contract Bienvenir {
             signedCommitments[msg.sender][nextSignedCommitmentId].id = nextSignedCommitmentId;
             signedCommitments[msg.sender][nextSignedCommitmentId].commitmentId = _commitmentId;
             signedCommitments[msg.sender][nextSignedCommitmentId].signatureDate = now;
-            signedCommitments[msg.sender][nextSignedCommitmentId].nextAccomplishmentId = 0;
+            signedCommitments[msg.sender][nextSignedCommitmentId].currentStep = 0;
+            signedCommitments[msg.sender][nextSignedCommitmentId].nextAccomplishmentId = 1;
 
             //Adding first default accomplishment
             Accomplishment memory _accomplishment;
@@ -228,6 +230,7 @@ contract Bienvenir {
             _signedCommitments[i].id = signedCommitments[msg.sender][i].id;
             _signedCommitments[i].commitmentId = signedCommitments[msg.sender][i].commitmentId;
             _signedCommitments[i].signatureDate = signedCommitments[msg.sender][i].signatureDate;
+            _signedCommitments[i].currentStep = signedCommitments[msg.sender][i].currentStep;
             _signedCommitments[i].nextAccomplishmentId = signedCommitments[msg.sender][i].nextAccomplishmentId;
             _signedCommitments[i].accomplishments = signedCommitments[msg.sender][i].accomplishments;
         }
@@ -269,16 +272,17 @@ contract Bienvenir {
             _loopAccomplishment.accomplishValue = _accomplishValue;
             signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_loopAccomplishment);
             signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextLoopAccomplishmentId + 1;
+            signedCommitments[msg.sender][_signedCommitmentId].currentStep = signedCommitments[msg.sender][_signedCommitmentId].currentStep + 1;
 
             if(commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].stepType == 3) { //automatic_transfer
 
                 //Automatic transfer from contract to beneficiary address with an ammount of transferValue from Commitment Step
-                if(address(this).balance >= commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue) {
-                    msg.sender.transfer(commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue);
-                } else {
-                    //Not enough funds
-                    break;
-                }
+                // if(address(this).balance >= commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue) {
+                //     msg.sender.transfer(commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue);
+                // } else {
+                //     //Not enough funds
+                //     break;
+                // }
 
                 uint _nextAutomaticAccomplishmentId = signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId;
                 Accomplishment memory _automaticAccomplishment;

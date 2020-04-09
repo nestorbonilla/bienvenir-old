@@ -22,7 +22,10 @@
         "information": "Information",
         "informationRequired": "Please add the information to complete this steps.",
         "aboutApp": "Bienvenir is an automatic decentralized application to support migrants in their regulatory process.",
-        "finalizeStep": "Finalize step"
+        "finalizeStep": "Finalize step",
+        "started": "Started",
+        "ended": "Ended",
+        "the": "the"
     },
     "lists": {
     }

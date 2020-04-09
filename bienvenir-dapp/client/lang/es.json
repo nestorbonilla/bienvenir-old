@@ -21,7 +21,10 @@
         "signCommitment": "Firmar Compromiso",
         "information": "Informacion",
         "informationRequired": "Por favor ingrese la informacion para completar el paso.",
-        "finalizeStep": "Concluir paso"
+        "finalizeStep": "Concluir paso",
+        "started": "Iniciado",
+        "ended": "Finalizado",
+        "the": "el"
     },
     "lists": {
     }

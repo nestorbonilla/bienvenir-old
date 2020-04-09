@@ -82,7 +82,7 @@ class SignedContractDetailScreen extends Component {
 
   render() {
     const { id, name, steps } = this.props.route.params
-    console.log('steps inside signed screen', steps)
+    //console.log('steps inside signed screen', steps)
     return (
       <View>
         <List.Section
@@ -91,34 +91,94 @@ class SignedContractDetailScreen extends Component {
         >
           {steps.map((step, i) => {
             let iconName = `numeric-${step.id + 1}-circle-outline`
-            return (
-              <List.Accordion
-                key={step.id}
-                titleNumberOfLines={10}
-                title={step.name}
-                style={styles.listAccordion}
-                left={
-                  props => <List.Icon {...props} icon={iconName} />
-                }
-              >
-                {step.accomplishments.map((accomplishment, i) => {
-                  let status = (accomplishment.accomplishmentCategory == 1) ? 'Iniciado' : 'Finalizado'
-                  let time = moment.unix(accomplishment.accomplishDate).format("DD-MM-YYYY");
-                  let accomplishmentName = `${status} el ${time}`
-                  return (
-                    <List.Item
-                      key={accomplishment.id}
-                      titleNumberOfLines={10}
-                      title={accomplishmentName}
-                      style={styles.listItem}
-                      left={
-                        props => <List.Icon {...props} icon="alarm" />
-                      }
-                    />
-                  )
-                })}
-              </List.Accordion>
-            )
+            if(step.accomplishments.length > 0) {
+              if (step.active) {
+                return (
+                  <List.Accordion
+                    key={step.id}
+                    titleNumberOfLines={10}
+                    title={step.name}
+                    style={styles.listAccordionActive}
+                    left={
+                      props => <List.Icon {...props} icon={iconName} />
+                    }
+                  >
+                    {step.accomplishments.map((accomplishment, i) => {
+                      let status = (accomplishment.accomplishmentCategory == 1) ? t('started') : t('ended')
+                      let time = moment.unix(accomplishment.accomplishDate).format("DD-MM-YYYY");
+                      let accomplishmentName = `${status} ${t('the')} ${time}`
+                      return (
+                        <List.Item
+                          key={accomplishment.id}
+                          titleNumberOfLines={10}
+                          title={accomplishmentName}
+                          style={styles.listItem}
+                          left={
+                            props => <List.Icon {...props} icon="alarm" />
+                          }
+                        />
+                      )
+                    })}
+                  </List.Accordion>
+                ) 
+              } else {
+                return (
+                  <List.Accordion
+                    key={step.id}
+                    titleNumberOfLines={10}
+                    title={step.name}
+                    style={styles.listAccordionInactive}
+                    left={
+                      props => <List.Icon {...props} icon={iconName} />
+                    }
+                  >
+                    {step.accomplishments.map((accomplishment, i) => {
+                      let status = (accomplishment.accomplishmentCategory == 1) ? t('started') : t('ended')
+                      let time = moment.unix(accomplishment.accomplishDate).format("DD-MM-YYYY");
+                      let accomplishmentName = `${status} ${t('the')} ${time}`
+                      return (
+                        <List.Item
+                          key={accomplishment.id}
+                          titleNumberOfLines={10}
+                          title={accomplishmentName}
+                          style={styles.listItem}
+                          left={
+                            props => <List.Icon {...props} icon="alarm" />
+                          }
+                        />
+                      )
+                    })}
+                  </List.Accordion>
+                )
+              }
+            } else {
+              if (step.active) {
+                return (
+                  <List.Item
+                    key={step.id}
+                    titleNumberOfLines={10}
+                    title={step.name}
+                    style={styles.listAccodionItemActive}
+                    left={
+                      props => <List.Icon {...props} icon={iconName} />
+                    }
+                  />
+                )
+              } else {
+                return (
+                  <List.Item
+                    key={step.id}
+                    titleNumberOfLines={10}
+                    title={step.name}
+                    style={styles.listAccodionItemInactive}
+                    left={
+                      props => <List.Icon {...props} icon={iconName} />
+                    }
+                  />
+                )
+              }
+              
+            }
           })}
         </List.Section>
         <Button 
@@ -153,7 +213,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  listAccordion: {
+  listAccordionActive: {
+  },
+  listAccordionInactive: {
+  },
+  listAccodionItemActive: {
+    marginLeft: 8
+  },
+  listAccodionItemInactive: {
+    marginLeft: 8,
+    opacity: 0.3
   },
   listItem: {
     marginLeft: 60

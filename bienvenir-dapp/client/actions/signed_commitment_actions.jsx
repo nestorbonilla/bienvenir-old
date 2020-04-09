@@ -40,7 +40,8 @@ doDestructureSignedCommitments = (commitments, bvSignedCommitments) => {
         let _id = parseInt(signedCommitment[0])
         let _commitmentId = parseInt(signedCommitment[1])
         let _signatureDate = parseInt(signedCommitment[2])
-        let _nextAccomplishmentId = parseInt(signedCommitment[3])
+        let _currentStep = parseInt(signedCommitment[3])
+        let _nextAccomplishmentId = parseInt(signedCommitment[4])
 
         //console.log('commitmentId in loop', _commitmentId)
         //console.log('commitment in loop', commitments[_commitmentId])
@@ -54,7 +55,12 @@ doDestructureSignedCommitments = (commitments, bvSignedCommitments) => {
             let _stepType = step.stepType               //simple, value_required, automatic_transfer
             let _transferValue = step.transferValue    //Zero by default, when stepType is automatic_transfer the value need to be higher than zero
             let _name = step.name
+            let _active = false;
             let _accomplishmentsByCommitment = []
+
+            if (_currentStep == step.id) {
+                _active = true;
+            }
 
             signedCommitment.accomplishments.forEach(accomplishment => {
                 let _id = parseInt(accomplishment[0])
@@ -63,10 +69,7 @@ doDestructureSignedCommitments = (commitments, bvSignedCommitments) => {
                 let _accomplishmentCategory = parseInt(accomplishment[3])     //started, ended
                 let _accomplishValue = accomplishment[4]
 
-                //console.log('accomplishment inside signed commitment', _stepId)
-                //console.log('step id inside signed commitment', step.id)
                 if (_stepId == step.id) {
-                    //console.log('_stepId match with step.id', 'yes')
                     _accomplishmentsByCommitment.push({
                         id: _id,
                         stepType: _stepType,
@@ -81,6 +84,7 @@ doDestructureSignedCommitments = (commitments, bvSignedCommitments) => {
                 id: _id,
                 stepType: _stepType,
                 transferValue: _transferValue,
+                active: _active,
                 name: _name,
                 accomplishments: _accomplishmentsByCommitment
             })
@@ -96,6 +100,6 @@ doDestructureSignedCommitments = (commitments, bvSignedCommitments) => {
             steps: _steps
         })
     })
-    console.log('final_signed_commitments', signedCommitments)
+    //console.log('final_signed_commitments', signedCommitments)
     return signedCommitments
 }

@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react'
-import { Image, StyleSheet, View, YellowBox} from 'react-native'
+import { Image, StyleSheet, View, YellowBox, Text} from 'react-native'
 import {
   Button,
   Paragraph
@@ -25,10 +25,10 @@ class HomeScreen extends Component {
               () => this.manageLogin()
             }
           >{this.props.celo.clLogin}</Button>
-          <Paragraph style={styles.paragraph}>{t('aboutApp')}</Paragraph>
-        {/* <Text>Dirección de cuenta:</Text>
+          <Text style={styles.paragraph}>{t('aboutApp')}</Text>
+        {/* <Text>Address:</Text>
         <Text>{this.props.celo.clAddress}</Text>
-        <Text>Teléfono: {this.props.celo.clPhone}</Text>
+        <Text>Phone: {this.props.celo.clPhone}</Text>
         <Text>Balance cUSD: {this.props.celo.clBalance}</Text> */}
       </View>
     );

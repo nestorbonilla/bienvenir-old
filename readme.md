@@ -12,4 +12,9 @@
 
 * [Deliverables week no. 1](https://github.com/nestorbonilla/bienvenir/tree/master/documentation/week_1.md)
 * [Deliverables week no. 2](https://github.com/nestorbonilla/bienvenir/tree/master/documentation/week_2.md)
-* [Deliverables week no. 3](https://github.com/nestorbonilla/bienvenir/tree/master/documentation/week_3.md)
+* [Deliverables week no. 3](https://github.com/nestorbonilla/bienvenir/tree/master/
+documentation/week_3.md)
+* [Deliverables week no. 4](https://github.com/nestorbonilla/bienvenir/tree/master/
+documentation/week_4.md)
+* [Deliverables week no. 3](https://github.com/nestorbonilla/bienvenir/tree/master/
+documentation/week_5.md)
