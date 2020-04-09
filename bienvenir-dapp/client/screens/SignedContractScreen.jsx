@@ -25,23 +25,25 @@ class SignedContractScreen extends Component {
         style={styles.container}
         contentContainerStyle={styles.content}
       >
-        {this.props.signedCommitments.map((item, i) => {
+        {this.props.signedCommitments.map((signedCommitment, i) => {
+          console.log('current step signed contract screen', signedCommitment)
           return (
             <Card
               key={i}
               style={styles.card}
               onPress={() => {
                 this.props.navigation.navigate('signedContractDetail', {
-                  id: item.id,
-                  name: item.name,
-                  description: item.description,
-                  steps: item.steps
+                  id: signedCommitment.id,
+                  name: signedCommitment.name,
+                  description: signedCommitment.description,
+                  currentStep: signedCommitment.currentStep,
+                  steps: signedCommitment.steps
                 })
               }}
             >
-              <Card.Title title={item.name} />
+              <Card.Title title={signedCommitment.name} />
               <Card.Content>
-                <Paragraph>{item.description}</Paragraph>
+                <Paragraph>{signedCommitment.description}</Paragraph>
               </Card.Content>
               <Card.Cover source={require('../assets/card_background_default.png')} />
             </Card>

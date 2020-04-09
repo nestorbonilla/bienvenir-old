@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, Alert } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import { 
   Avatar,
   Paragraph,
@@ -56,7 +56,7 @@ class SignedContractDetailScreen extends Component {
     } else {
       let assignment = {
         signedCommitmentId: this.props.route.params.id,
-        stepId: 0,
+        stepId: this.props.route.params.currentStep,
         accomplishValue: ''
       }
       this.props.celoCreateAssignment(assignment)  
@@ -64,15 +64,13 @@ class SignedContractDetailScreen extends Component {
   }
 
   sendTransactionWithValue(txValue){
-    console.log("transaction_value: "+txValue);
-
     //API validation to verify if the provided code is valid for the step the beneficiary is applying for
     let codeValidation = true;
     if (codeValidation) {
       let stepType = this.props.route.params.steps[this.props.route.params.id].stepType
       let assignment = {
         signedCommitmentId: this.props.route.params.id,
-        stepId: 0,
+        stepId: this.props.route.params.currentStep,
         accomplishValue: txValue
       }
       this.props.celoCreateAssignment(assignment)  
@@ -84,7 +82,10 @@ class SignedContractDetailScreen extends Component {
     const { id, name, steps } = this.props.route.params
     //console.log('steps inside signed screen', steps)
     return (
-      <View>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+      >
         <List.Section
           titleNumberOfLines={10}
           title={name}
@@ -104,9 +105,9 @@ class SignedContractDetailScreen extends Component {
                     }
                   >
                     {step.accomplishments.map((accomplishment, i) => {
-                      let status = (accomplishment.accomplishmentCategory == 1) ? t('started') : t('ended')
-                      let time = moment.unix(accomplishment.accomplishDate).format("DD-MM-YYYY");
-                      let accomplishmentName = `${status} ${t('the')} ${time}`
+                      let accomplishmentStatus = (accomplishment.accomplishmentCategory == 1) ? t('started') : t('ended')
+                      let accomplishmentTime = moment.unix(accomplishment.accomplishDate).format("DD-MM-YYYY") + ' ' + moment.unix(accomplishment.accomplishDate).format("HH:mm:ss")
+                      let accomplishmentName = `${accomplishmentStatus} ${t('the')} ${accomplishmentTime}`
                       return (
                         <List.Item
                           key={accomplishment.id}
@@ -133,9 +134,9 @@ class SignedContractDetailScreen extends Component {
                     }
                   >
                     {step.accomplishments.map((accomplishment, i) => {
-                      let status = (accomplishment.accomplishmentCategory == 1) ? t('started') : t('ended')
-                      let time = moment.unix(accomplishment.accomplishDate).format("DD-MM-YYYY");
-                      let accomplishmentName = `${status} ${t('the')} ${time}`
+                      let accomplishmentStatus = (accomplishment.accomplishmentCategory == 1) ? t('started') : t('ended')
+                      let accomplishmentTime = moment.unix(accomplishment.accomplishDate).format("DD-MM-YYYY") + ' ' + moment.unix(accomplishment.accomplishDate).format("HH:mm:ss")
+                      let accomplishmentName = `${accomplishmentStatus} ${t('the')} ${accomplishmentTime}`
                       return (
                         <List.Item
                           key={accomplishment.id}
@@ -193,19 +194,17 @@ class SignedContractDetailScreen extends Component {
             submitInput={ (txValue) => {this.sendTransactionWithValue(txValue)} }
             closeDialog={ () => {this.showDialog(false)}}>
         </DialogInput>
-      </View>
+      </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     flex: 1,
-    justifyContent: 'center',
-    paddingTop: 30,
-    backgroundColor: '#ecf0f1',
-    padding: 8,
+  },
+  content: {
+    padding: 4,
   },
   paragraph: {
     margin: 24,

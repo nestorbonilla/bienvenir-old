@@ -22,6 +22,8 @@ export const celoGetSignedCommitments = () => async dispatch => {
     let bvSignedCommitments = await bvContract.methods.getSignedCommitments().call()
     let signedCommitments = []
 
+    console.log('celo signed commitment', bvSignedCommitments)
+
     let commitments = await store.getState().commitment.commitments
     
     signedCommitments = doDestructureSignedCommitments(commitments, bvSignedCommitments)
@@ -97,6 +99,7 @@ doDestructureSignedCommitments = (commitments, bvSignedCommitments) => {
             nextAccomplishmentId: _nextAccomplishmentId,
             name: _commitmentName,
             description: _commitmentDescription,
+            currentStep: _currentStep,
             steps: _steps
         })
     })

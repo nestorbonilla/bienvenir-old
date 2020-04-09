@@ -253,28 +253,35 @@ contract Bienvenir {
         _accomplishment.id = _nextAccomplishmentId;
         _accomplishment.stepId = _stepId;
         _accomplishment.accomplishDate = now;
-        _accomplishment.accomplishmentCategory = 2;                         //finished
+        _accomplishment.accomplishmentCategory = 2;                     //finished
         _accomplishment.accomplishValue = _accomplishValue;
         signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_accomplishment);
-        signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId + 1;
+        _nextAccomplishmentId++;
+        signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId;
+
+        //If there's a next step, let's initialize it
+        if((_accomplishment.stepId + 1) < commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps.length) {
+            //Start the next step, creating a new Accomplismenth with category 1
+            _stepId++;
+            Accomplishment memory _startAccomplishment;
+            _startAccomplishment.id = _nextAccomplishmentId;
+            _startAccomplishment.stepId = _stepId;
+            _startAccomplishment.accomplishDate = now;
+            _startAccomplishment.accomplishmentCategory = 1;                 //started
+            _startAccomplishment.accomplishValue = _accomplishValue;
+            signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_startAccomplishment);
+            _nextAccomplishmentId++;
+            signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId;
+            signedCommitments[msg.sender][_signedCommitmentId].currentStep = signedCommitments[msg.sender][_signedCommitmentId].currentStep + 1;
+        }
 
         //Loop to verify if there are more steps to complete
         //and if its type is aumatic_transfer then transfer the ammount placed on the value to the beneficiary wallet
         for(uint i = _stepId; i < commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps.length; i++) {
 
-            //Start the next step, creating a new Accomplismenth with category 1
-            uint _nextLoopAccomplishmentId = signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId;
-            Accomplishment memory _loopAccomplishment;
-            _loopAccomplishment.id = _nextLoopAccomplishmentId;
-            _loopAccomplishment.stepId = i;
-            _loopAccomplishment.accomplishDate = now;
-            _loopAccomplishment.accomplishmentCategory = 1;                 //started
-            _loopAccomplishment.accomplishValue = _accomplishValue;
-            signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_loopAccomplishment);
-            signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextLoopAccomplishmentId + 1;
-            signedCommitments[msg.sender][_signedCommitmentId].currentStep = signedCommitments[msg.sender][_signedCommitmentId].currentStep + 1;
-
-            if(commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].stepType == 3) { //automatic_transfer
+            bool isAutomaticTransfer = commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].stepType == 3;
+            bool isCurrentStep = signedCommitments[msg.sender][_signedCommitmentId].currentStep == i;
+            if(isAutomaticTransfer && isCurrentStep) {
 
                 //Automatic transfer from contract to beneficiary address with an ammount of transferValue from Commitment Step
                 // if(address(this).balance >= commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue) {
@@ -284,15 +291,31 @@ contract Bienvenir {
                 //     break;
                 // }
 
-                uint _nextAutomaticAccomplishmentId = signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId;
                 Accomplishment memory _automaticAccomplishment;
-                _automaticAccomplishment.id = _nextAutomaticAccomplishmentId;
+                _automaticAccomplishment.id = _nextAccomplishmentId;
                 _automaticAccomplishment.stepId = i;
                 _automaticAccomplishment.accomplishDate = now;
                 _automaticAccomplishment.accomplishmentCategory = 2;        //finished
                 _automaticAccomplishment.accomplishValue = 'transfer complete';
                 signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_automaticAccomplishment);
-                signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAutomaticAccomplishmentId + 1;
+                _nextAccomplishmentId++;
+                signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId++;
+
+                //If there's a next step, let's initialize it
+                if((_automaticAccomplishment.stepId + 1) < commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps.length) {
+                    //Start the next step, creating a new Accomplismenth with category 1
+                    _stepId++;
+                    Accomplishment memory _startAccomplishment;
+                    _startAccomplishment.id = _nextAccomplishmentId;
+                    _startAccomplishment.stepId = _stepId;
+                    _startAccomplishment.accomplishDate = now;
+                    _startAccomplishment.accomplishmentCategory = 1;                 //started
+                    _startAccomplishment.accomplishValue = _accomplishValue;
+                    signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_startAccomplishment);
+                    _nextAccomplishmentId++;
+                    signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId;
+                    signedCommitments[msg.sender][_signedCommitmentId].currentStep = signedCommitments[msg.sender][_signedCommitmentId].currentStep + 1;
+                }
             }
         }
     }

@@ -67,7 +67,7 @@ export const celoCreateAssignment = (assignment) => async dispatch => {
     //const txObject = await bvContract.methods.createSignedCommitmentAccomplishment(assignment)
 
     console.log('assignment before send', assignment)
-    console.log('assignment tx before send', txObject)
+    //console.log('assignment tx before send', txObject)
 
     requestTxSig(
         kit,
