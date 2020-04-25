@@ -46,6 +46,7 @@ class SignedContractDetailScreen extends Component {
   manageAccomplishment() {
     //Get step type to validate if a transaction value is required
     let stepType = this.props.route.params.steps[this.props.route.params.id].stepType
+    console.log('step type', stepType)
 
     //STEP TYPES OPTIONS
     //1. simple

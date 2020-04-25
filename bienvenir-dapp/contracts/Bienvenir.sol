@@ -1,5 +1,6 @@
 pragma solidity >=0.5.0 <0.7.0;
 pragma experimental ABIEncoderV2;
+//import {BN} from  './bn.js';
 
 /// @title Decentralized application to help coordinate and improve the impact
 ///        metric of non-profit organizations that work with migrants in Latin America
@@ -52,7 +53,7 @@ contract Bienvenir {
         uint id;
         uint stepId;
         uint accomplishDate;
-        uint accomplishmentCategory;    //started, finished
+        uint accomplishCategory;    //started, finished
         string accomplishValue;
     }
 
@@ -126,9 +127,9 @@ contract Bienvenir {
     function deposit() external payable {
     }
 
-    /// @notice beneficiary adds its address to be able to sign a commitment
+    /// @notice Beneficiary adds its address to be able to sign a commitment
     ///         and adds its accomplishments.
-    /// @dev beneficiary must be provided as an address
+    /// @dev Beneficiary must be provided as an address.
     /// @param _beneficiary The address of a beneficiary
     function createBeneficiary(
         address _beneficiary
@@ -136,9 +137,34 @@ contract Bienvenir {
         beneficiaries[_beneficiary] = true;
     }
 
-    /// @notice admin creates a commitment based on the previous agreement
+    /// @notice Verification of beneficiaries that has signed at least one commitment
+    /// @dev beneficiaries is a mapping, it will only return either true or false
+    function isBeneficiary() public view returns (bool)
+    {
+        return beneficiaries[msg.sender];
+    }
+
+    /// @notice Utility function to create a temporal accomplishment object
+    /// @dev Accomplishment will be provided as an object
+    function getTemporalAccomplishment(
+        uint _id,
+        uint _stepId,
+        uint _accomplishDate,
+        uint _accomplishCategory,    //1. started, 2. finished
+        string memory _accomplishValue
+    ) private view onlyBeneficiary() returns (Accomplishment memory) {
+        Accomplishment memory _accomplishment;
+        _accomplishment.id = _id;
+        _accomplishment.stepId = _stepId;
+        _accomplishment.accomplishDate = _accomplishDate;
+        _accomplishment.accomplishCategory = _accomplishCategory;
+        _accomplishment.accomplishValue = _accomplishValue;
+        return _accomplishment;
+    }
+
+    /// @notice Admin creates a commitment based on the previous agreement
     ///         with donors or supporting organizations.
-    /// @dev steps must be provided as an array of string, but should be saved as an array of steps
+    /// @dev Steps must be provided as an array of string, but should be saved as an array of steps.
     /// @param  _name The name of the commitment
     ///         description The description of the commmitment
     ///         steps Array of strings of steps of the commitment
@@ -166,7 +192,7 @@ contract Bienvenir {
     }
 
     /// @notice Anyone can obtain a list of the available commitments of the platform.
-    /// @dev commitments can only be provided in array, not in mapping
+    /// @dev Commitments can only be provided in array, not in mapping.
     function getCommitments() public view returns (Commitment[] memory) {
         Commitment[] memory _commitments = new Commitment[](nextCommitmentId);
         for (uint i = 0; i < nextCommitmentId; i++) {
@@ -180,8 +206,21 @@ contract Bienvenir {
         return _commitments;
     }
 
-    /// @notice beneficiary can sign a commitment
-    /// @dev beneficiary sign a commitment to be able to accomplish its requisites and obtain the benefits
+    /// @notice Anyone can obtain a specific available commitments of the platform.
+    /// @dev To obtain a commitment just an id needs to be provided.
+    function getCommitment(uint _id) public view returns (Commitment memory) {
+        Commitment memory _commitment;
+        _commitment.id = commitments[_id].id;
+        _commitment.name = commitments[_id].name;
+        _commitment.description = commitments[_id].description;
+        _commitment.creationDate = commitments[_id].creationDate;
+        _commitment.steps = commitments[_id].steps;
+        _commitment.status = commitments[_id].status;
+        return _commitment;
+    }
+
+    /// @notice Beneficiary can sign a commitment
+    /// @dev Beneficiary sign a commitment to be able to accomplish its requisites and obtain the benefits
     /// @param  _commitmentId The id of the available commitment
     function createSignedCommitment(
         uint _commitmentId
@@ -206,12 +245,7 @@ contract Bienvenir {
             signedCommitments[msg.sender][nextSignedCommitmentId].nextAccomplishmentId = 1;
 
             //Adding first default accomplishment
-            Accomplishment memory _accomplishment;
-            _accomplishment.id = 0;
-            _accomplishment.stepId = 0;
-            _accomplishment.accomplishDate = now;
-            _accomplishment.accomplishmentCategory = 1;
-            _accomplishment.accomplishValue = '';
+            Accomplishment memory _accomplishment = getTemporalAccomplishment(0, 0, now, 1, '');
             signedCommitments[msg.sender][nextSignedCommitmentId].accomplishments.push(_accomplishment);
 
             nextSignedCommitmentId++;
@@ -220,7 +254,7 @@ contract Bienvenir {
     }
 
     /// @notice Each beneficiary can obtain a list of the commitments already signed.
-    /// @dev commitments can only be provided in array, not in mapping
+    /// @dev Commitments can only be provided in array, not in mapping
     function getSignedCommitments()
         public view onlyBeneficiary()
         returns (SignedCommitment[] memory)
@@ -237,42 +271,50 @@ contract Bienvenir {
         return _signedCommitments;
     }
 
-    /// @notice beneficiary can sign a commitment
-    /// @dev beneficiary sign a commitment to be able to accomplish its requisites and obtain the benefits
+    /// @notice Each beneficiary can obtain a specific commitments already signed.
+    /// @dev Commitments will be provided as an object
+    function getSignedCommitment(uint _id)
+        public view onlyBeneficiary()
+        returns (SignedCommitment memory)
+    {
+        return signedCommitments[msg.sender][_id];
+    }
+
+    /// @notice Beneficiary can accomplishment of a specific step of a previously signed commitmet
+    /// @dev Depending on the category of step, steps can be accomplished automatically
     /// @param  _signedCommitmentId The id of the available commitment
     function createSignedCommitmentAccomplishment(
         uint _signedCommitmentId,
         uint _stepId,
         string memory _accomplishValue
     ) public payable onlyBeneficiary() {
+
+        //Commitment ID
+        uint _commitmentId = signedCommitments[msg.sender][_signedCommitmentId].commitmentId;
+
         //Get length of the accomplishments
         uint _nextAccomplishmentId = signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId;
+        uint _currentStep = signedCommitments[msg.sender][_signedCommitmentId].currentStep;
+        _currentStep++;
 
-        //Push a new accomplishment of conclusion, accomplishmentCategory 2
-        Accomplishment memory _accomplishment;
-        _accomplishment.id = _nextAccomplishmentId;
-        _accomplishment.stepId = _stepId;
-        _accomplishment.accomplishDate = now;
-        _accomplishment.accomplishmentCategory = 2;                     //finished
-        _accomplishment.accomplishValue = _accomplishValue;
+        //Push a new accomplishment of conclusion, accomplishCategory 2
+        Accomplishment memory _accomplishment = getTemporalAccomplishment(_nextAccomplishmentId, _stepId, now, 2, _accomplishValue);
         signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_accomplishment);
         _nextAccomplishmentId++;
         signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId;
+
+        //Clean the value
+        _accomplishValue = '';
 
         //If there's a next step, let's initialize it
         if((_accomplishment.stepId + 1) < commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps.length) {
             //Start the next step, creating a new Accomplismenth with category 1
             _stepId++;
-            Accomplishment memory _startAccomplishment;
-            _startAccomplishment.id = _nextAccomplishmentId;
-            _startAccomplishment.stepId = _stepId;
-            _startAccomplishment.accomplishDate = now;
-            _startAccomplishment.accomplishmentCategory = 1;                 //started
-            _startAccomplishment.accomplishValue = _accomplishValue;
+            Accomplishment memory _startAccomplishment = getTemporalAccomplishment(_nextAccomplishmentId, _stepId, now, 1, _accomplishValue);
             signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_startAccomplishment);
             _nextAccomplishmentId++;
             signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId;
-            signedCommitments[msg.sender][_signedCommitmentId].currentStep = signedCommitments[msg.sender][_signedCommitmentId].currentStep + 1;
+            signedCommitments[msg.sender][_signedCommitmentId].currentStep = _currentStep;
         }
 
         //Loop to verify if there are more steps to complete
@@ -283,34 +325,19 @@ contract Bienvenir {
             bool isCurrentStep = signedCommitments[msg.sender][_signedCommitmentId].currentStep == i;
             if(isAutomaticTransfer && isCurrentStep) {
 
-                //Automatic transfer from contract to beneficiary address with an ammount of transferValue from Commitment Step
-                // if(address(this).balance >= commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue) {
-                //     msg.sender.transfer(commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps[i].transferValue);
-                // } else {
-                //     //Not enough funds
-                //     break;
-                // }
+                //Code that breaks the function
+                //transferToBeneficiary(_commitmentId, i);
 
-                Accomplishment memory _automaticAccomplishment;
-                _automaticAccomplishment.id = _nextAccomplishmentId;
-                _automaticAccomplishment.stepId = i;
-                _automaticAccomplishment.accomplishDate = now;
-                _automaticAccomplishment.accomplishmentCategory = 2;        //finished
-                _automaticAccomplishment.accomplishValue = 'transfer complete';
+                Accomplishment memory _automaticAccomplishment = getTemporalAccomplishment(_nextAccomplishmentId, i, now, 2, 'transfer_complete');
                 signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_automaticAccomplishment);
                 _nextAccomplishmentId++;
                 signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId++;
 
                 //If there's a next step, let's initialize it
-                if((_automaticAccomplishment.stepId + 1) < commitments[signedCommitments[msg.sender][_signedCommitmentId].commitmentId].steps.length) {
+                if((_automaticAccomplishment.stepId + 1) < commitments[_commitmentId].steps.length) {
                     //Start the next step, creating a new Accomplismenth with category 1
                     _stepId++;
-                    Accomplishment memory _startAccomplishment;
-                    _startAccomplishment.id = _nextAccomplishmentId;
-                    _startAccomplishment.stepId = _stepId;
-                    _startAccomplishment.accomplishDate = now;
-                    _startAccomplishment.accomplishmentCategory = 1;                 //started
-                    _startAccomplishment.accomplishValue = _accomplishValue;
+                    Accomplishment memory _startAccomplishment = getTemporalAccomplishment(_nextAccomplishmentId, _stepId, now, 1, '');
                     signedCommitments[msg.sender][_signedCommitmentId].accomplishments.push(_startAccomplishment);
                     _nextAccomplishmentId++;
                     signedCommitments[msg.sender][_signedCommitmentId].nextAccomplishmentId = _nextAccomplishmentId;
@@ -318,5 +345,18 @@ contract Bienvenir {
                 }
             }
         }
+    }
+
+    //Payable code moved to a public function just for test purposes
+    function transferToBeneficiary(
+        uint _commitmentId,
+        uint _stepId
+    ) public payable onlyBeneficiary() {
+        uint _contractBalance = address(this).balance;
+        uint _transferAmount = commitments[_commitmentId].steps[_stepId].transferValue;
+        //Automatic transfer from contract to beneficiary address with an ammount of transferValue from Commitment Step
+         if(_contractBalance > _transferAmount) {
+            msg.sender.transfer(_transferAmount);
+         }
     }
 }

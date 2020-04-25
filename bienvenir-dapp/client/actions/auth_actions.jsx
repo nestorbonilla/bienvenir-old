@@ -87,6 +87,8 @@ const doCeloLogin = async dispatch => {
             'clContractName': '',
             'clTextInput': ''
         }
+
+        console.log('authentication', authentication)
         
         dispatch({ type: CELO_LOGIN_SUCCESS, authentication })
     }
