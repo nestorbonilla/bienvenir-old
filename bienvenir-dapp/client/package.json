@@ -35,7 +35,7 @@
     "i18n-js": "^3.5.1",
     "i18next": "^19.4.0",
     "libphonenumber-js": "^1.7.22",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "native-base": "^2.13.4",
     "node-libs-react-native": "^1.0.3",
     "openzeppelin-solidity": "^2.3.0",
